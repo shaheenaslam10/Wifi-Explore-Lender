@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainback"
+    tools:context="com.zaingz.holygon.wifi_explorelender.AddRouterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX=".8"
+                android:scaleY=".8"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+
+                android:text="Add Device"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editText_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="15"
+                android:drawablePadding="10dp"
+                android:hint="SSID"
+
+                android:inputType="textEmailAddress"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+
+
+            <EditText
+                android:id="@+id/editText_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="15"
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:hint="Security Type"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+
+
+            <EditText
+                android:id="@+id/editText_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="15"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/eye"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+            <EditText
+                android:id="@+id/editText_password1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="15"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+       <!-- <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="25"
+            android:layout_height="wrap_content"></LinearLayout>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="45"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/adddevicemap"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:hint="Add Your Location"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:background="@drawable/btngreen"
+                android:layout_height="45dp"></EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <EditText
+                android:id="@+id/editText_name1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="15"
+                android:drawablePadding="10dp"
+                android:hint="SSID"
+
+                android:inputType="textEmailAddress"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="20"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/btnadd"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
