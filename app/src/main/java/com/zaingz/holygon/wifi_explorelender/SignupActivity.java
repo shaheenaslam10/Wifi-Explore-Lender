@@ -1,18 +1,18 @@
 package com.zaingz.holygon.wifi_explorelender;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
 import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
 import com.zaingz.holygon.wifi_explorelender.Valoidators.Validations;
@@ -21,12 +21,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -39,7 +37,7 @@ public class SignupActivity extends AppCompatActivity {
     ImageView btn_login;
     String jname,jemail,jmobile_number,jemail_verified,jmobile_number_verified,jblocked,jtoken;
     Realm realm;
-
+    CircularProgressView progressView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +49,36 @@ public class SignupActivity extends AppCompatActivity {
         edit_password = (EditText) findViewById(R.id.editText_passwordsignup);
         btn_login = (ImageView) findViewById(R.id.btn_loginsignup);
 
+        progressView = (CircularProgressView) findViewById(R.id.progress_view);
+        progressView.setVisibility(View.INVISIBLE);
 
 
 
+        edit_password.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (event.getRawX() >= (edit_password.getRight() - edit_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        edit_password.setInputType(InputType.TYPE_CLASS_TEXT);
+                        return true;
+                    }
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (edit_password.getRight() - edit_password.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        edit_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +111,8 @@ public class SignupActivity extends AppCompatActivity {
 
                     Log.e("shani", "In else part: " );
 
+                    btn_login.setVisibility(View.INVISIBLE);
+                    progressView.setVisibility(View.VISIBLE);
 
                     st_edit_name = edit_name.getText().toString();
                     st_edit_email = edit_email.getText().toString();
@@ -103,6 +130,12 @@ public class SignupActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    protected void onPause() {
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        super.onPause();
+    }
 
     public class AsynchTaskDownload extends AsyncTask<String, String, String> {
 
@@ -112,7 +145,14 @@ public class SignupActivity extends AppCompatActivity {
 
             Log.e("shani", "In do in background " );
 
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client;
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.connectTimeout(5, TimeUnit.MINUTES)
+                    .writeTimeout(5, TimeUnit.MINUTES)
+                    .readTimeout(5, TimeUnit.MINUTES);
+
+            client = builder.build();
 
             RequestBody requestBody = new FormBody.Builder()
                     .add("lender[name]", st_edit_name)
@@ -131,10 +171,9 @@ public class SignupActivity extends AppCompatActivity {
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
 
-                    Log.e("shani", "post response: " + response);
+                    String json_string = response.body().string();
 
-                   /* String json_string = response.body().toString();
-
+                    Log.e("shani", "post response signup  : " + json_string);
                     JSONObject jsonobj = new JSONObject(json_string);
                     JSONObject jsonobjChild = jsonobj.getJSONObject("lender");
 
@@ -148,6 +187,14 @@ public class SignupActivity extends AppCompatActivity {
 
 
                     realm = Realm.getDefaultInstance();
+
+                    if (realm.where(SignUpDatabase.class).count() > 0) {
+                        realm.beginTransaction();
+                        realm.deleteAll();
+                        realm.commitTransaction();
+                    }
+
+
                     realm.beginTransaction();
                     SignUpDatabase signupData = realm.createObject(SignUpDatabase.class);
                     signupData.setName(jname);
@@ -158,7 +205,6 @@ public class SignupActivity extends AppCompatActivity {
                     signupData.setBlocked(jblocked);
                     signupData.setToken(jtoken);
                     realm.commitTransaction();
-*/
                    runOnUiThread(new Runnable() {
                        @Override
                        public void run() {
@@ -172,11 +218,22 @@ public class SignupActivity extends AppCompatActivity {
 
                 }
                 else{
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            btn_login.setVisibility(View.VISIBLE);
+                            progressView.setVisibility(View.INVISIBLE);
+                            Toast.makeText(SignupActivity.this, "Response Unsuccessful...", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     Log.e("shani", "post response unsuccessful : " + response.toString());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("shani", "post response failure: " + e.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             return null;
         }

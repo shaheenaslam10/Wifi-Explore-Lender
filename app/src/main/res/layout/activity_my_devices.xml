@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/mainback"
+    android:orientation="vertical"
     tools:context="com.zaingz.holygon.wifi_explorelender.MyDevicesActivity">
 
     <android.support.v7.widget.Toolbar
@@ -33,14 +34,16 @@
                 android:textColor="@color/white"
                 android:textSize="22dp" />
 
+
             <TextView
+                android:id="@+id/toolbar_device_count"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/round"
                 android:gravity="center"
-                android:text="12"
+                android:text="0"
                 android:textColor="@color/blackText" />
 
             <RelativeLayout
@@ -52,8 +55,8 @@
 
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
 
+    </android.support.v7.widget.Toolbar>
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
@@ -64,214 +67,140 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
         android:background="@color/wallet_color"
         android:orientation="vertical"
-        android:weightSum="100">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:gravity="center"
-            android:text="This Year Summary"
-            android:textColor="@color/white"
-            android:textSize="16dp" />
+        android:weightSum="200">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="80"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:layout_weight="180"
+            android:weightSum="100"
+            >
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Graph......"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                android:layout_weight="7">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:text="This Year Summary"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="93"
+                android:orientation="horizontal">
+
+                  <com.jjoe64.graphview.GraphView
+                      android:layout_width="match_parent"
+                      xmlns:app="http://schemas.android.com/apk/res-auto"
+                      app:seriesType="line"
+                      android:layout_height="260dp"
+                      android:layout_margin="20dp"
+                      android:id="@+id/graph" />
 
 
+            </LinearLayout>
         </LinearLayout>
 
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/toolbar"
-            android:background="@color/white" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:padding="2dp"
-            android:gravity="center"
-            android:text="All Devices Details"
-            android:textColor="@color/white"
-            android:textSize="16dp" />
-
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/toolbar"
-            android:background="@color/white" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:orientation="horizontal"
-            android:weightSum="300">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="100"
-                android:orientation="vertical"
-                android:weightSum="100">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="50" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:src="@drawable/star" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="4 / 3"
-                    android:textColor="@color/white"
-                    android:textSize="17dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/green_light" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:src="@drawable/usergreen" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="250"
-                    android:textColor="@color/white"
-                    android:textSize="17dp" />
-            </LinearLayout>
+            android:orientation="vertical"
+            android:layout_weight="20"
+            android:weightSum="100">
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/green_light" />
 
-            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="100"
-                android:orientation="vertical"
-                android:weightSum="100">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="50" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:src="@drawable/data" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="65 GB"
-                    android:textColor="@color/white"
-                    android:textSize="17dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/green_light" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:src="@drawable/money" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
-                    android:text="$ 237"
-                    android:textColor="@color/white"
-                    android:textSize="17dp" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/green_light" />
-
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="@color/white" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="100"
-                android:orientation="vertical"
-                android:weightSum="100">
+                android:layout_weight="40">
 
-                <RelativeLayout
+                <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:text="All Devices Details"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </LinearLayout>
+            <View
 
-                    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="@color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="60"
+                android:weightSum="200">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:orientation="horizontal"
+                    android:weightSum="300">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:orientation="vertical">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+                        android:orientation="vertical"
+                        android:layout_weight="100">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:tint="@color/green"
+                            android:src="@drawable/upload" />
+
+                        <TextView
+                            android:id="@+id/up_data"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:text="0GB"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/green_light"
+                        android:layout_marginTop="15dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="100">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -279,44 +208,162 @@
                             android:src="@drawable/star" />
 
                         <TextView
+                            android:id="@+id/rating"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center"
-                            android:text="4 / 3"
+                            android:text="0/5"
                             android:textColor="@color/white"
-                            android:textSize="17dp" />
+                            android:textSize="14dp" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/green_light"
+                        android:layout_marginTop="15dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="100">
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/green_light" />
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
+
+                        <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:tint="@color/green"
+                            android:src="@drawable/download" />
+
+                        <TextView
+                            android:id="@+id/down_data"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:text="0GB"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/green_light" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:orientation="horizontal"
+                    android:weightSum="300">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="100">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:tint="@color/green_light"
+                            android:src="@drawable/usergreen" />
+
+                        <TextView
+                            android:id="@+id/connected"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/green_light"
+                        android:layout_marginBottom="15dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="100">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/money" />
+
+                        <TextView
+                            android:id="@+id/total_money"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:text="$0"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/green_light"
+                        android:layout_marginBottom="15dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="100">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50" />
 
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
-                            android:src="@drawable/usergreen" />
+                            android:tint="@color/green_light"
+                            android:src="@drawable/router" />
 
                         <TextView
+                            android:id="@+id/routers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center"
-                            android:text="250"
+                            android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="17dp" />
-
+                            android:textSize="14dp" />
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
+
+
 
 
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
 
@@ -37,7 +36,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 else {
                     mainIntent = new Intent(getApplicationContext(), LoginActivity.class);
-
                 }
 
                 startActivity(mainIntent);
@@ -45,5 +43,11 @@ public class SplashActivity extends AppCompatActivity {
             }
         },2000);
 
+    }
+    @Override
+    protected void onPause() {
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        super.onPause();
     }
 }

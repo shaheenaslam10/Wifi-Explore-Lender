@@ -10,7 +10,6 @@ public class RoutersModel {
     String name;
     String signal_strength;
     String rating;
-
     public String getName() {
         return name;
     }

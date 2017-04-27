@@ -24,6 +24,8 @@
             android:weightSum="100">
 
             <ImageView
+                android:id="@+id/addDeviceBack"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleX=".8"
@@ -41,14 +43,11 @@
                 android:textSize="25dp" />
 
         </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:background="@color/white" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,36 +56,36 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/editText_name"
+                android:id="@+id/editTextadd_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="6dp"
                 android:layout_weight="15"
                 android:drawablePadding="10dp"
-                android:hint="SSID"
+                android:hint="NAME"
 
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:paddingBottom="20dp"
                 android:textSize="15dp" />
 
 
             <EditText
-                android:id="@+id/editText_mobile"
+                android:id="@+id/editTextadd_ssid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_weight="15"
                 android:drawablePadding="10dp"
                 android:ems="10"
-                android:hint="Security Type"
-                android:inputType="textEmailAddress"
+                android:hint="SSID"
+                android:inputType="text"
                 android:paddingBottom="20dp"
                 android:textSize="15dp" />
 
 
             <EditText
-                android:id="@+id/editText_password"
+                android:id="@+id/editTextadd_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
@@ -99,60 +98,68 @@
                 android:paddingBottom="20dp"
                 android:textSize="15dp" />
             <EditText
-                android:id="@+id/editText_password1"
+                android:id="@+id/editTextadd_securityType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_weight="15"
                 android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
+                android:hint="Security Type"
+                android:inputType="text"
                 android:paddingBottom="20dp"
                 android:textSize="15dp" />
 
         </LinearLayout>
-       <!-- <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_weight="25"
-            android:layout_height="wrap_content"></LinearLayout>-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="45"
-            android:layout_marginTop="10dp"
             android:background="@drawable/adddevicemap"
-            android:layout_height="wrap_content">
+            android:layout_height="150dp">
 
-            <EditText
+              <Button
+                android:id="@+id/editTextadd_address"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:hint="Add Your Location"
+                android:text="Add Your Location"
+                  android:textColor="@color/blackText"
                 android:gravity="center"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:background="@drawable/btngreen"
-                android:layout_height="45dp"></EditText>
-        </LinearLayout>
+                android:layout_height="45dp"/>
 
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:orientation="vertical"
             android:layout_marginRight="20dp">
 
             <EditText
-                android:id="@+id/editText_name1"
+                android:id="@+id/editTextadd_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="6dp"
                 android:layout_weight="15"
                 android:drawablePadding="10dp"
-                android:hint="SSID"
-
-                android:inputType="textEmailAddress"
+                android:hint="Price"
+                android:inputType="number"
+                android:paddingBottom="20dp"
+                android:textSize="15dp" />
+            <EditText
+                android:id="@+id/editTextadd_av_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="15"
+                android:drawablePadding="10dp"
+                android:hint="Average Speed"
+                android:inputType="number"
                 android:paddingBottom="20dp"
                 android:textSize="15dp" />
 
@@ -160,14 +167,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_weight="20"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            <com.github.rahatarmanahmed.cpv.CircularProgressView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progress_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                app:cpv_animAutostart="true"
+                app:cpv_color="@color/green_light"
+                app:cpv_indeterminate="true" />
             <ImageView
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_addrouter"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
                 android:src="@drawable/btnadd"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content" />
+                android:layout_height="50dp" />
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

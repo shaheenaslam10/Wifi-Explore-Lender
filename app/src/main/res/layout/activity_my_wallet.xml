@@ -70,12 +70,13 @@
             android:textSize="19dp" />
 
         <TextView
+            android:id="@+id/currentBlnce"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="2"
             android:gravity="center|left"
-            android:text="$ 24,888  USD"
+            android:text="$ 0  USD"
             android:textColor="@color/green_light"
             android:textSize="25dp" />
 
@@ -118,16 +119,17 @@
                         app:cpv_background_circle_width="10dp"
                         app:cpv_circle_color="@color/green"
                         app:cpv_circle_width="10dp"
-                        app:cpv_text_suffix="March" />
+                        app:cpv_text_suffix="January" />
 
                     <TextView
+                        android:id="@+id/circleMonth"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
-                        android:text="March"
+                        android:text="January"
                         android:textColor="@color/white"
                         android:textSize="16dp" />
 
@@ -202,11 +204,12 @@
                         android:visibility="invisible" />
 
                     <TextView
+                        android:id="@+id/income"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:text="$ 34,000 USD"
+                        android:text="$ 0 USD"
                         android:textColor="@color/white"
                         android:textSize="14dp" />
                 </LinearLayout>
@@ -284,11 +287,12 @@
                         android:visibility="invisible" />
 
                     <TextView
+                        android:id="@+id/outcome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:text="$ 34,000 USD"
+                        android:text="$ 0 USD"
                         android:textColor="@color/white"
                         android:textSize="14dp" />
                 </LinearLayout>
@@ -393,6 +397,7 @@ android:layout_marginTop="3dp"
                     android:src="@drawable/withdraw" />
 
                 <TextView
+                    android:id="@+id/withdraw_payment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -425,12 +430,13 @@ android:layout_marginTop="3dp"
                     android:src="@drawable/payment" />
 
                 <TextView
+                    android:id="@+id/bank_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="90"
                     android:paddingLeft="10dp"
-                    android:text="Payment Method"
+                    android:text="Bank Information"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
 

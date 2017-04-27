@@ -49,13 +49,14 @@
                         android:textSize="22dp" />
 
                     <TextView
+                        android:id="@+id/toolbar_device_count"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
                         android:layout_marginLeft="2dp"
                         android:background="@drawable/round"
                         android:gravity="center"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="@color/blackText" />
 
                     <RelativeLayout
@@ -373,6 +374,7 @@
 
 
                     <TextView
+                        android:id="@+id/tv_myprofile"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -468,6 +470,7 @@
 
 
                     <TextView
+                        android:id="@+id/tv_wallet"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
