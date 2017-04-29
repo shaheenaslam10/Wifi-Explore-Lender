@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +43,7 @@ public class AddRouterActivity extends AppCompatActivity {
     String st_ed_name, st_ed_ssid, st_ed_security, st_ed_pass, st_ed_avspeed, st_ed_price;
     String st_lat, st_lng;
     Context context;
-    ImageView btn_addRouter,addDeviceBack;
+    ImageView btn_addRouter;
     Realm realm;
     String tokenData;
     String jaddname, jadd_ssid, jadd_pass, jadd_address, jadd_security, jadd_price, jadd_avspeed, jadd_lat, jadd_lng;
@@ -62,9 +63,25 @@ public class AddRouterActivity extends AppCompatActivity {
         ed_price = (EditText) findViewById(R.id.editTextadd_price);
         ed_pass = (EditText) findViewById(R.id.editTextadd_password);
         btn_addRouter = (ImageView) findViewById(R.id.btn_addrouter);
+        add = (Button) findViewById(R.id.editTextadd_address);
         progressView = (CircularProgressView) findViewById(R.id.progress_view);
+
         progressView.setVisibility(View.INVISIBLE);
 
+
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("");
+        mToolbar.setNavigationIcon(R.drawable.back);
+        mToolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+
+                }
+
+        );
 
         if (getIntent().getStringExtra("namegoback")!=null){
 
@@ -87,17 +104,10 @@ public class AddRouterActivity extends AppCompatActivity {
 
 
 
-        addDeviceBack = (ImageView)findViewById(R.id.addDeviceBack);
 
 
-        addDeviceBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
-        add = (Button) findViewById(R.id.editTextadd_address);
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,9 +236,9 @@ public class AddRouterActivity extends AppCompatActivity {
 
             realm = Realm.getDefaultInstance();
 
-            if (realm.where(SignUpDatabase.class).count()>0){
+            if (realm.where(WifiLenderData.class).count() > 0) {
 
-                RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
+                RealmResults<WifiLenderData> record = realm.where(WifiLenderData.class).findAll();
                 for (int i = 0; i < record.size(); i++) {
                     tokenData = record.get(i).getToken();
                 }

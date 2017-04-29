@@ -9,44 +9,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:weightSum="100">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
 
-            <ImageView
-                android:id="@+id/addDeviceBack"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX=".8"
-                android:scaleY=".8"
-                android:src="@drawable/back" />
 
-            <TextView
+            android:minHeight="?attr/actionBarSize"
+            android:titleTextColor="@color/white">
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-                android:text="Add Device"
-                android:textColor="@color/white"
-                android:textSize="25dp" />
+                <TextView
+                    android:id="@+id/toll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="8mm"
+                    android:text="Add Device"
+                    android:textColor="@color/white"
+                    android:textSize="22dp" />
 
-        </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
+
             android:background="@color/white" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -113,30 +114,30 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="150dp"
             android:background="@drawable/adddevicemap"
-            android:layout_height="150dp">
+            android:orientation="horizontal">
 
               <Button
                 android:id="@+id/editTextadd_address"
                 android:layout_width="match_parent"
+                  android:layout_height="45dp"
                 android:layout_gravity="center"
-                android:text="Add Your Location"
-                  android:textColor="@color/blackText"
-                android:gravity="center"
+                  android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:textColorHint="@color/colorPrimaryDark"
                 android:background="@drawable/btngreen"
-                android:layout_height="45dp"/>
+                  android:gravity="center"
+                  android:text="Add Your Location"
+                  android:textColor="@color/blackText"
+                  android:textColorHint="@color/colorPrimaryDark" />
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:orientation="vertical"
-            android:layout_marginRight="20dp">
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/editTextadd_price"
@@ -166,8 +167,8 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
             <RelativeLayout
@@ -186,11 +187,11 @@
                 app:cpv_indeterminate="true" />
             <ImageView
                 android:id="@+id/btn_addrouter"
-                android:layout_centerInParent="true"
                 android:layout_width="match_parent"
-                android:src="@drawable/btnadd"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_height="50dp" />
+                android:src="@drawable/btnadd" />
             </RelativeLayout>
 
         </LinearLayout>

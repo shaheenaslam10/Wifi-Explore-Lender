@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by Shani on 4/14/2017.
  */
 
-public class SignUpDatabase extends RealmObject {
+public class WifiLenderData extends RealmObject {
     String name;
     String email;
     String mobile_number;
@@ -15,7 +15,8 @@ public class SignUpDatabase extends RealmObject {
     String blocked;
     String token;
 
-    public SignUpDatabase(){}
+    public WifiLenderData() {
+    }
 
     public String getName() {
         return name;

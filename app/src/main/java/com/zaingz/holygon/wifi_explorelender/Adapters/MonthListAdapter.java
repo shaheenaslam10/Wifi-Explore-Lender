@@ -8,19 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.zaingz.holygon.wifi_explorelender.DataModel.RoutersModel;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
-import com.zaingz.holygon.wifi_explorelender.Database.WalletDataBase;
 import com.zaingz.holygon.wifi_explorelender.MyInterface;
-import com.zaingz.holygon.wifi_explorelender.MyWalletActivit;
 import com.zaingz.holygon.wifi_explorelender.R;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Muhammad Shan on 11/04/2017.
@@ -29,11 +23,11 @@ import io.realm.RealmResults;
 public class MonthListAdapter extends android.support.v7.widget.RecyclerView.Adapter<MonthListAdapter.RecyclerHolder> {
 
 
+    public MyInterface listener;
     ArrayList<String> routerDatas = new ArrayList<>();
     Context context;
     Realm realm;
     TextView blnce;
-    public MyInterface listener;
 
 
     public MonthListAdapter(ArrayList<String> routerDatas, Context context, MyInterface listener) {

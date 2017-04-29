@@ -74,8 +74,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="180"
+            android:orientation="vertical"
             android:weightSum="100"
             >
 
@@ -86,8 +86,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_marginTop="6dp"
+                    android:gravity="center"
                     android:text="This Year Summary"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
@@ -99,12 +99,13 @@
                 android:orientation="horizontal">
 
                   <com.jjoe64.graphview.GraphView
-                      android:layout_width="match_parent"
                       xmlns:app="http://schemas.android.com/apk/res-auto"
-                      app:seriesType="line"
+                      android:id="@+id/graph"
+                      android:layout_width="match_parent"
                       android:layout_height="260dp"
                       android:layout_margin="20dp"
-                      android:id="@+id/graph" />
+
+                      app:seriesType="points" />
 
 
             </LinearLayout>
@@ -113,8 +114,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="20"
+            android:orientation="vertical"
             android:weightSum="100">
 
             <View
@@ -131,8 +132,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="2dp"
                     android:gravity="center"
+                    android:padding="2dp"
                     android:text="All Devices Details"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
@@ -146,8 +147,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_weight="60"
+                android:orientation="vertical"
                 android:weightSum="200">
 
                 <LinearLayout
@@ -160,8 +161,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,8 +172,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:tint="@color/green"
-                            android:src="@drawable/upload" />
+                            android:src="@drawable/upload"
+                            android:tint="@color/green" />
 
                         <TextView
                             android:id="@+id/up_data"
@@ -187,13 +188,13 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/green_light"
-                        android:layout_marginTop="15dp"/>
+                        android:layout_marginTop="15dp"
+                        android:background="@color/green_light" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
 
                         <TextView
@@ -220,13 +221,13 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/green_light"
-                        android:layout_marginTop="15dp"/>
+                        android:layout_marginTop="15dp"
+                        android:background="@color/green_light" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
 
                         <TextView
@@ -237,8 +238,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:tint="@color/green"
-                            android:src="@drawable/download" />
+                            android:src="@drawable/download"
+                            android:tint="@color/green" />
 
                         <TextView
                             android:id="@+id/down_data"
@@ -265,8 +266,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -276,8 +277,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:tint="@color/green_light"
-                            android:src="@drawable/usergreen" />
+                            android:src="@drawable/usergreen"
+                            android:tint="@color/green_light" />
 
                         <TextView
                             android:id="@+id/connected"
@@ -293,13 +294,13 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/green_light"
-                        android:layout_marginBottom="15dp"/>
+                        android:layout_marginBottom="15dp"
+                        android:background="@color/green_light" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
 
                         <TextView
@@ -325,13 +326,13 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:background="@color/green_light"
-                        android:layout_marginBottom="15dp"/>
+                        android:layout_marginBottom="15dp"
+                        android:background="@color/green_light" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="100">
+                        android:layout_weight="100"
+                        android:orientation="vertical">
 
 
                         <TextView
@@ -343,8 +344,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
-                            android:tint="@color/green_light"
-                            android:src="@drawable/router" />
+                            android:src="@drawable/router"
+                            android:tint="@color/green_light" />
 
                         <TextView
                             android:id="@+id/routers"

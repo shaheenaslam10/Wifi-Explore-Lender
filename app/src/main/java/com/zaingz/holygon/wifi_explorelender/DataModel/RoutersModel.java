@@ -10,6 +10,29 @@ public class RoutersModel {
     String name;
     String signal_strength;
     String rating;
+    String id;
+    String devices;
+
+    public RoutersModel(String name, String signal_strength, String rating, String id, String devices) {
+        this.name = name;
+        this.signal_strength = signal_strength;
+        this.rating = rating;
+        this.id = id;
+        this.devices = devices;
+    }
+
+    public RoutersModel() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -41,17 +64,4 @@ public class RoutersModel {
     public void setDevices(String devices) {
         this.devices = devices;
     }
-
-    public RoutersModel(String name, String signal_strength, String rating, String devices) {
-        this.name = name;
-        this.signal_strength = signal_strength;
-        this.rating = rating;
-        this.devices = devices;
-    }
-
-    public RoutersModel() {
-
-    }
-
-    String devices;
 }

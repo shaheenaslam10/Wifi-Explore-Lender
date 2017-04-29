@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,18 +28,6 @@
                 android:weightSum="100">
 
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/profile_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="75dp"
-
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-
-                    android:src="@drawable/btngreen"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="1dp" />
-
 
             </LinearLayout>
 
@@ -55,18 +45,18 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:paddingLeft="16dp"
+
                     android:text="Muhammad Shan"
                     android:textColor="@color/black"
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txt_email"
                     android:layout_width="match_parent"
+
                     android:layout_height="wrap_content"
-
                     android:gravity="center"
-
                     android:text="Baghban Pura Lahore"
                     android:textColor="@color/black" />
 
@@ -95,116 +85,79 @@
             android:layout_height="1dp"
             android:background="@color/menu_divider" />
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="21dp"
-            android:layout_marginTop="15dp"
-android:id="@+id/ll_history"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/history"
-                android:tint="@color/green" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="90"
-
-                android:gravity="center|left"
-                android:text="History"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                android:src="@drawable/right"
-                android:tint="@color/white" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/menu_divider" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="21dp"
-            android:layout_marginTop="15dp"
+            android:orientation="vertical"
             android:id="@+id/ll_devices"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/router"
-                android:tint="@color/green" />
+            android:layout_height="wrap_content">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:layout_weight="89"
+              <LinearLayout
 
-                android:gravity="center|left"
-                android:text="My Devices"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
+                  android:layout_width="match_parent"
+                  android:layout_height="21dp"
+                  android:layout_marginTop="15dp"
+                  android:orientation="horizontal"
+                  android:weightSum="100">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                  <ImageView
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:layout_marginLeft="20dp"
+                      android:src="@drawable/router"
+                      android:tint="@color/green" />
 
-                android:src="@drawable/right"
-                android:tint="@color/white" />
 
-        </LinearLayout>
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:layout_gravity="center"
+                      android:layout_marginLeft="20dp"
+                      android:layout_weight="89"
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                      android:gravity="center|left"
+                      android:text="Summary"
+                      android:textColor="@color/white"
+                      android:textSize="16dp" />
 
-        <View
+                  <ImageView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="right"
+
+                      android:src="@drawable/right"
+                      android:tint="@color/white" />
+
+              </LinearLayout>
+
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" />
+        </LinearLayout>-->
+
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/menu_divider" />
-
+            android:background="@color/menu_divider" />-->
 
         <LinearLayout
+            android:id="@+id/ll_profile"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
-            android:id="@+id/ll_profile"
             android:weightSum="100">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="25dp"
                 android:src="@drawable/user"
                 android:tint="@color/green" />
 
@@ -233,18 +186,24 @@ android:id="@+id/ll_history"
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/menu_divider" />
 
-
         <LinearLayout
+            android:id="@+id/ll_add"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginTop="15dp"
-android:id="@+id/ll_add"
             android:orientation="horizontal"
             android:weightSum="100">
 
@@ -280,18 +239,23 @@ android:id="@+id/ll_add"
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/menu_divider" />
 
-
         <LinearLayout
+            android:id="@+id/ll_wallet"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginTop="15dp"
-            android:id="@+id/ll_wallet"
             android:orientation="horizontal"
             android:weightSum="100">
 
@@ -328,18 +292,23 @@ android:id="@+id/ll_add"
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/menu_divider" />
-
         <LinearLayout
+            android:id="@+id/ll_logout"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginTop="15dp"
-            android:id="@+id/ll_logout"
             android:orientation="horizontal"
             android:weightSum="100">
 
@@ -375,7 +344,7 @@ android:id="@+id/ll_add"
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -393,9 +362,9 @@ android:id="@+id/ll_add"
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/txt_earnings"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:id="@+id/txt_earnings"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"

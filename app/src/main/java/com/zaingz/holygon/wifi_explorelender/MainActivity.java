@@ -1,5 +1,6 @@
 package com.zaingz.holygon.wifi_explorelender;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,12 +9,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -27,8 +27,10 @@ import com.zaingz.holygon.wifi_explorelender.API.URLs;
 import com.zaingz.holygon.wifi_explorelender.Adapters.GridAdapter;
 import com.zaingz.holygon.wifi_explorelender.Adapters.RoutersListAdapter;
 import com.zaingz.holygon.wifi_explorelender.DataModel.RoutersModel;
+import com.zaingz.holygon.wifi_explorelender.Database.Mytoken;
 import com.zaingz.holygon.wifi_explorelender.Database.RouterGetList;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
+import com.zaingz.holygon.wifi_explorelender.Database.WalletDataBase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +38,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -49,15 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout mDrawerLayout;
     ImageView img_list;
-
     RecyclerView recyclerView;
     RoutersListAdapter recyclerAdapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<RoutersModel> routersModels = new ArrayList<>();
     Realm realm;
-    String jadd_name, jadd_ssid, jadd_address, jadd_security, jadd_price, jadd_avspeed, jadd_lat, jadd_lng, jadd_connection, jadd_rating;
-
-    String get_name,get_rating,get_signal,get_count;
+    String jadd_id, jadd_name, jadd_ssid, jadd_address, jadd_security, jadd_price, jadd_avspeed, jadd_lat, jadd_lng, jadd_connection, jadd_rating;
 
     GridView grid;
     boolean list = true;
@@ -65,14 +62,17 @@ public class MainActivity extends AppCompatActivity {
     String tokenData;
     int device_cnt;
     String st_device_cnt;
-
-    LinearLayout ll_wallet, ll_history, ll_add, ll_devices, ll_logout, ll_profile;
-    TextView txt_earnings,toolbar_device_count;
-
+    LinearLayout ll_wallet, ll_add, ll_devices, ll_logout, ll_profile;
+    TextView txt_earnings, toolbar_device_count;
+    String myToekn;
+    ProgressDialog dialog;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dialog = ProgressDialog.show(MainActivity.this, "", "Please wait...", true);
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -80,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
         ll_wallet = (LinearLayout) findViewById(R.id.ll_wallet);
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
         ll_devices = (LinearLayout) findViewById(R.id.ll_devices);
-        ll_history = (LinearLayout) findViewById(R.id.ll_history);
+
         ll_logout = (LinearLayout) findViewById(R.id.ll_logout);
         ll_profile = (LinearLayout) findViewById(R.id.ll_profile);
 
         txt_earnings = (TextView) findViewById(R.id.txt_earnings);
-        toolbar_device_count = (TextView)findViewById(R.id.toolbar_device_count);
+        toolbar_device_count = (TextView) findViewById(R.id.toolbar_device_count);
 
 
         ll_wallet.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MyDevicesActivity.class);
-                intent.putExtra("device_count",st_device_cnt);
+                intent.putExtra("device_count", st_device_cnt);
                 startActivity(intent);
             }
         });
@@ -129,11 +129,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 realm = Realm.getDefaultInstance();
+
                 realm.beginTransaction();
-                if (realm.where(SignUpDatabase.class).count() > 0) {
-                    realm.deleteAll();
-                }
+                realm.clear(WifiLenderData.class);
+                realm.clear(Mytoken.class);
+                realm.clear(WalletDataBase.class);
+                realm.clear(RouterGetList.class);
                 realm.commitTransaction();
+                realm.close();
+
 
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 finish();
@@ -178,12 +182,11 @@ public class MainActivity extends AppCompatActivity {
 
         AsynchRouterList asynchRouterList = new AsynchRouterList();
         asynchRouterList.execute();
-
-
-
+        dialog.show();
 
 
     }
+
     @Override
     protected void onPause() {
 
@@ -191,6 +194,25 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                   /* Toast.makeText(getApplicationContext(), "this is my HomeT",
+                            Toast.LENGTH_LONG).show();*/
+                mDrawerLayout.openDrawer(GravityCompat.START);
+
+
+                return true;
+
+            /*    case R.id.action_settings:
+                    return true;*/
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public class AsynchRouterList extends AsyncTask<String, String, String> {
 
@@ -198,21 +220,12 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
 
-
-
-
-
             realm = Realm.getDefaultInstance();
+            WifiLenderData wifiLenderData = realm.where(WifiLenderData.class).findFirst();
+            myToekn = wifiLenderData.getToken();
+            realm.close();
 
-            if (realm.where(SignUpDatabase.class).count()>0){
-
-                RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
-                for (int i = 0; i < record.size(); i++) {
-                    tokenData = record.get(i).getToken();
-                }
-            }
-
-
+            Log.e("shani", "before call my token=" + myToekn);
 
 
             OkHttpClient client;
@@ -220,33 +233,40 @@ public class MainActivity extends AppCompatActivity {
             //for increase time to get response from server
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(5, TimeUnit.MINUTES)
-                    .writeTimeout(5, TimeUnit.MINUTES)
-                    .readTimeout(5, TimeUnit.MINUTES);
+
 
             client = builder.build();
 
             Request request = new Request.Builder()
                     .url(URLs.LENDER_WIFIS)
-                    .addHeader("Authorization", "Token token=" + tokenData)
+                    .addHeader("Authorization", "Token token=" + myToekn)
                     .build();
 
 
             try {
                 Response response = client.newCall(request).execute();
 
-                realm.beginTransaction();
 
                 if (response.isSuccessful()) {
 
 
-                    String json_string = response.body().string();
+                    final String json_string = response.body().string();
                     Log.e("shani", "Lender wifis post response suuccessfull ====  : " + json_string);
                     JSONObject jsonobj = new JSONObject(json_string);
-                    JSONArray jsonArray = jsonobj.getJSONArray("wifis");
+                    final JSONArray jsonArray = jsonobj.getJSONArray("wifis");
 
                     device_cnt = jsonArray.length();
                     st_device_cnt = String.valueOf(device_cnt);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            if (device_cnt == 0) {
+                                Toast.makeText(MainActivity.this, "No device added yet !", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
 
                     Log.e("shani", "device count  : " + st_device_cnt);
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -255,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+                        jadd_id = jsonObject.getString("id");
                         jadd_name = jsonObject.getString("name");
                         jadd_ssid = jsonObject.getString("ssid");
 
@@ -272,41 +293,17 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("shani", "Lender wifis post response strings ====  : " + jadd_address);
 
 
-
-                        // store json response in database
-
-
-                        RouterGetList routerGetList = realm.createObject(RouterGetList.class);
-
-
-                        routerGetList.setName(jadd_name);
-                        routerGetList.setSsid(jadd_ssid);
-                        routerGetList.setAddress(jadd_address);
-                        routerGetList.setLatitude(jadd_lat);
-                        routerGetList.setLongitude(jadd_lng);
-                        routerGetList.setSecurity_type(jadd_security);
-                        routerGetList.setPrice(jadd_price);
-                        routerGetList.setAvg_speed(jadd_avspeed);
-                        routerGetList.setConnections(jadd_connection);
-                        routerGetList.setRating(jadd_rating);
-
+                        Log.e("shani", "id in main ......" + jadd_id);
 
 
                         //get response for adapter
 
-                        RealmResults<RouterGetList> record = realm.where(RouterGetList.class).findAll();
-
-                            get_name = record.get(i).getName();
-                            get_rating = record.get(i).getRating();
-                            get_count = record.get(i).getConnections();
-                            get_signal = "Good";
-
-                        String rating = get_rating+"/5";
-                            Log.i("tag", "making array list foir adapoter" + get_name);
+                        String rating = jadd_rating + "/5";
+                        Log.i("tag", "making array list foir adapoter" + jadd_name);
 
 
-                            RoutersModel routerData = new RoutersModel(get_name, get_signal, rating, get_count);
-                            routersModels.add(routerData);
+                        RoutersModel routerData = new RoutersModel(jadd_name, "Good", rating, jadd_id, jadd_connection);
+                        routersModels.add(routerData);
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -319,7 +316,9 @@ public class MainActivity extends AppCompatActivity {
                                 recyclerView.setLayoutManager(layoutManager);
                                 recyclerView.setAdapter(recyclerAdapter);
 
+
                                 //grid view
+
 
                                 GridAdapter adapter = new GridAdapter(MainActivity.this, routersModels);
                                 grid = (GridView) findViewById(R.id.grid_view);
@@ -329,19 +328,17 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view,
                                                             int position, long id) {
-                                        Toast.makeText(MainActivity.this, "You Clicked at " + routersModels.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+                                        intent = new Intent(getApplicationContext(), MyDevicesActivity.class);
+                                        intent.putExtra("namrouter", routersModels.get(position).getName());
+                                        intent.putExtra("idroutergrid", routersModels.get(position).getId());
+                                        startActivity(intent);
 
                                     }
                                 });
-
                             }
                         });
-
                     }
-
-
-
-                    realm.commitTransaction();
                 } else {
                     Log.e("shani", "Lender wifis get response unsuccessful : " + response.toString());
                 }
@@ -370,26 +367,5 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
         }
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                   /* Toast.makeText(getApplicationContext(), "this is my HomeT",
-                            Toast.LENGTH_LONG).show();*/
-                mDrawerLayout.openDrawer(GravityCompat.START);
-
-
-                return true;
-
-            /*    case R.id.action_settings:
-                    return true;*/
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

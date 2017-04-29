@@ -1,27 +1,27 @@
 package com.zaingz.holygon.wifi_explorelender;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.zaingz.holygon.wifi_explorelender.API.URLs;
 import com.zaingz.holygon.wifi_explorelender.Database.RouterGetList;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,12 +32,18 @@ import okhttp3.Response;
 public class MyDevicesActivity extends AppCompatActivity {
 
     Realm realm;
-    String tokenData;
-    TextView updata,downdata,ratings,connected,routers,total_money,toolbar_device_count;
-    String st_updata,st_downdata,st_ratings,st_connected,st_total_money;
-    String month,earning;
+    String tokenDataf;
+    TextView updata, downdata, ratings, connected, routers, total_money, toolbar_device_count, toolTitle;
+    String st_updata, st_downdata, st_ratings, st_connected, st_total_money;
+    String month, earning;
     String device_count;
-
+    ProgressDialog dialog;
+    String idd;
+    GraphView graph;
+    String[] months;
+    String[] earnings;
+    LineGraphSeries<DataPoint> series;
+    StaticLabelsFormatter staticLabelsFormatter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,43 +62,68 @@ public class MyDevicesActivity extends AppCompatActivity {
                 }
 
         );
+        dialog = ProgressDialog.show(MyDevicesActivity.this, "", "Please wait...", true);
 
-        updata = (TextView)findViewById(R.id.up_data);
-        downdata = (TextView)findViewById(R.id.down_data);
-        ratings = (TextView)findViewById(R.id.rating);
-        connected = (TextView)findViewById(R.id.connected);
-        routers = (TextView)findViewById(R.id.routers);
-        total_money = (TextView)findViewById(R.id.total_money);
-        toolbar_device_count = (TextView)findViewById(R.id.toolbar_device_count);
+        toolTitle = (TextView) findViewById(R.id.toll);
+        updata = (TextView) findViewById(R.id.up_data);
+        downdata = (TextView) findViewById(R.id.down_data);
+        ratings = (TextView) findViewById(R.id.rating);
+        connected = (TextView) findViewById(R.id.connected);
+        routers = (TextView) findViewById(R.id.routers);
+        total_money = (TextView) findViewById(R.id.total_money);
+        toolbar_device_count = (TextView) findViewById(R.id.toolbar_device_count);
 
         Intent intent = getIntent();
-         String intnt = intent.getStringExtra("device_count");
+        String intntrouterName = intent.getStringExtra("namrouter");
+        String intRouterIdList = intent.getStringExtra("idrouterlist");
+        String intRouterIdgrid = intent.getStringExtra("idroutergrid");
+        toolTitle.setText(intntrouterName);
 
-        toolbar_device_count.setText(intnt);
+        if (intRouterIdList != null) {
+            idd = intRouterIdList;
+        } else {
+            idd = intRouterIdgrid;
+        }
+
+
+        graph = (GraphView) findViewById(R.id.graph);
+
+
+       /* staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+        staticLabelsFormatter.setVerticalLabels(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);*/
 
 
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(1, 1),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 10),
-                new DataPoint(5, 2),
-                new DataPoint(6, 2),
-                new DataPoint(7, 2),
-                new DataPoint(8, 2),
-                new DataPoint(9, 2),
-                new DataPoint(10, 2),
-                new DataPoint(11, 2),
-                new DataPoint(12, 2),
+       /* graph.getViewport().setScrollable(true);
+        graph.getViewport().setScrollableY(true);
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScalableY(true);*/
 
+
+        // custom label formatter to show currency "EUR"
+       /* graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueY) {
+                if (isValueY) {
+                    // show normal x values
+                    return super.formatLabel(value, isValueY);
+                } else {
+                    // show currency for y values
+                    return  "$ "+super.formatLabel(value, isValueY);
+                }
+            }
         });
-        graph.addSeries(series);
+*/
 
 
         AsynchAllDeviceData asynchAllDeviceData = new AsynchAllDeviceData();
         asynchAllDeviceData.execute();
+        dialog.show();
+
+        // use static labels for horizontal and vertical labels
 
 
     }
@@ -110,35 +141,25 @@ public class MyDevicesActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
 
-
-
             realm = Realm.getDefaultInstance();
+            WifiLenderData record = realm.where(WifiLenderData.class).findFirst();
+            tokenDataf = record.getToken();
+            realm.close();
 
-            if (realm.where(SignUpDatabase.class).count()>0){
-
-                RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
-                for (int i = 0; i < record.size(); i++) {
-                    tokenData = record.get(i).getToken();
-                }
-            }
-
-
+            Log.e("shani", "in mY device activity toekn" + tokenDataf);
 
 
             OkHttpClient client;
-
             //for increase time to get response from server
-
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(5, TimeUnit.MINUTES)
-                    .writeTimeout(5, TimeUnit.MINUTES)
-                    .readTimeout(5, TimeUnit.MINUTES);
-
             client = builder.build();
 
+
+            Log.e("shani", "id >........" + idd);
             Request request = new Request.Builder()
-                    .url(URLs.EARNINGS)
-                    .addHeader("Authorization", "Token token=" + tokenData)
+                    .url("https://wifiexplore.herokuapp.com/api/lender/wifis/" + idd + ".json")
+                    .addHeader("Authorization", "Token token=" + tokenDataf)
+                    //   .addHeader("Authorization", "Token token=" + tokenDataf)
                     .get()
                     .build();
 
@@ -157,31 +178,43 @@ public class MyDevicesActivity extends AppCompatActivity {
                     JSONObject jsonObject = jsonobj.getJSONObject("earning");
 
 
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+
+                        }
+                    });
+
+
+
+
                     st_ratings = jsonObject.getString("rating");
                     st_downdata = jsonObject.getString("download_data");
                     st_updata = jsonObject.getString("upload_data");
                     st_connected = jsonObject.getString("connections");
                     st_total_money = jsonObject.getString("total_earnings");
 
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updata.setText(st_updata+" GB");
-                            downdata.setText(st_downdata+" GB");
-                            ratings.setText(st_ratings+" /5");
+                            updata.setText(st_updata + " GB");
+                            downdata.setText(st_downdata + " GB");
+                            ratings.setText(st_ratings + " /5");
                             connected.setText(st_connected);
-                            total_money.setText("$"+st_total_money+" USD");
+                            total_money.setText("$" + st_total_money + " USD");
+                            toolbar_device_count.setText(st_connected);
 
                             realm = Realm.getDefaultInstance();
-                          RealmResults<RouterGetList> record = realm.where(RouterGetList.class).findAll();
-                            for (int i = 0; i <record.size() ; i++) {
-                                 String cnn = record.get(i).getConnections();
+                            RealmResults<RouterGetList> record = realm.where(RouterGetList.class).findAll();
+                            for (int i = 0; i < record.size(); i++) {
+                                String cnn = record.get(i).getConnections();
                                 routers.setText(cnn);
 
                             }
                         }
                     });
-
 
 
                     JSONArray jsonArray = jsonObject.getJSONArray("monthly_earning");
@@ -193,48 +226,93 @@ public class MyDevicesActivity extends AppCompatActivity {
                         month = jsonObject1.getString("month");
                         earning = jsonObject1.getString("earning");
 
-/*
-                        Log.e("shani", "Lender wifis post response strings ====  : " + jadd_name);
-                        Log.e("shani", "Lender wifis post response strings ====  : " + jadd_ssid);
-                        Log.e("shani", "Lender wifis post response strings ====  : " + jadd_address);*/
+                        final int finalI = i;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //  String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+                                String[] monthssss = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+                                for (int j = 0; j < monthssss.length; j++) {
+                                    if (monthssss[finalI] == month) {
+                                        //  Float d = Float.parseFloat(month);
+                                        Integer m = Integer.parseInt(earning);
+
+                                        series = new LineGraphSeries<>(new DataPoint[]{
+
+                                                new DataPoint(j + 1, 2),
+                                                new DataPoint(j + 1, 3),
+                                                new DataPoint(j + 1, 4),
+                                                new DataPoint(j + 1, 5),
+                                                new DataPoint(j + 1, 6),
+                                                new DataPoint(j + 1, 7)
+
+
+                                        });
+
+                                        Log.e("shani", "series........" + series);
+                                    } else {
+
+                                        series = new LineGraphSeries<>(new DataPoint[]{
+
+                                                new DataPoint(j + 1, 0)
+
+
+                                        });
+                                    }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            graph.addSeries(series);
+
+                                        }
+                                    });
+
+                                }
+                            }
+                        });
+
+
+                        Log.e("shani", "month of response.." + month);
+
+                          /*  months[i]=month;
+                            earnings[i]=earning;
+*/
 
 
 
-                        // store json response in database
-
-                       /* realm = Realm.getDefaultInstance();
-                        realm.beginTransaction();
-                        RouterGetList routerGetList = realm.createObject(RouterGetList.class);
-                        routerGetList.setName(jadd_name);
-                        routerGetList.setSsid(jadd_ssid);
-                        routerGetList.setAddress(jadd_address);
-                        routerGetList.setLatitude(jadd_lat);
-                        routerGetList.setLongitude(jadd_lng);
-                        routerGetList.setSecurity_type(jadd_security);
-                        routerGetList.setPrice(jadd_price);
-                        routerGetList.setAvg_speed(jadd_avspeed);
-                        routerGetList.setConnections(jadd_connection);
-                        routerGetList.setRating(jadd_rating);
-                        realm.commitTransaction();
 
 
-                        //get response for adapter
 
-                        RealmResults<RouterGetList> record = realm.where(RouterGetList.class).findAll();
 
-                        get_name = record.get(i).getName();
-                        get_rating = record.get(i).getRating();
-                        get_count = record.get(i).getConnections();
-                        get_signal = "Good";
+                       /* final int finalI = i;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
 
-                        String rating = get_rating+"/5";
-                        Log.i("tag", "making array list foir adapoter" + get_name);*/
+                                staticLabelsFormatter = new StaticLabelsFormatter(graph);
+                                //staticLabelsFormatter.setHorizontalLabels(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+                                staticLabelsFormatter.setHorizontalLabels(months);
+                                staticLabelsFormatter.setVerticalLabels(earnings);
+                                graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
+
+                                double d = (double) finalI;
+                                Double m = Double.parseDouble(month);
+                                series = new LineGraphSeries<>(new DataPoint[] {
+
+                                        new DataPoint(d, m),
+
+
+                                });
+
+                            }
+                        });*/
 
 
 
 
                     }
+
 
                 } else {
                     Log.e("shani", "Total Earnings get response unsuccessful : " + response.toString());

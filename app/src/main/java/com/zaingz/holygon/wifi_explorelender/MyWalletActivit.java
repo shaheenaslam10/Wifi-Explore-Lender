@@ -2,9 +2,10 @@ package com.zaingz.holygon.wifi_explorelender;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,8 +21,8 @@ import android.widget.Toast;
 import com.eralp.circleprogressview.CircleProgressView;
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
 import com.zaingz.holygon.wifi_explorelender.Adapters.MonthListAdapter;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
 import com.zaingz.holygon.wifi_explorelender.Database.WalletDataBase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +30,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -46,37 +46,39 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
     MonthListAdapter recyclerAdapter;
     RecyclerView.LayoutManager layoutManager;
     ArrayList<String> routerDatas = new ArrayList<>();
-    private CircleProgressView mCircleProgressView3;
-    TextView bank_info,withdraw,bank_send,curr_balance,income,outcome,circleMonth;
+    TextView bank_info, withdraw, bank_send, curr_balance, income, outcome, circleMonth;
     Realm realm;
     String tokenData;
-    EditText bank_name,bank_currency,bank_country,bank_rout,bank_accnumber,amount;
-    String st_bank_name,st_bank_currency,st_bank_country,st_bank_rout,st_bank_accnumber,st_amount,balance;
+    EditText bank_name, bank_currency, bank_country, bank_rout, bank_accnumber, amount;
+    String st_bank_name, st_bank_currency, st_bank_country, st_bank_rout, st_bank_accnumber, st_amount, balance;
     CustomDialogClass cdd;
     CustomDialogWithdraw cdw;
-    int state = 0,check=0;
+    int state = 0, check = 0;
     String month, cr_blnc;
-    String temEEarn,temDEarn;
-
+    String temEEarn, temDEarn;
+    ProgressDialog dialog;
+    private CircleProgressView mCircleProgressView3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wallet);
 
+        dialog = ProgressDialog.show(MyWalletActivit.this, "", "Please wait...", true);
 
-        curr_balance = (TextView)findViewById(R.id.currentBlnce);
-        withdraw = (TextView)findViewById(R.id.withdraw_payment);
-        bank_info = (TextView)findViewById(R.id.bank_info);
+
+        curr_balance = (TextView) findViewById(R.id.currentBlnce);
+        withdraw = (TextView) findViewById(R.id.withdraw_payment);
+        bank_info = (TextView) findViewById(R.id.bank_info);
+
+
+        income = (TextView) findViewById(R.id.income);
+        outcome = (TextView) findViewById(R.id.outcome);
+        circleMonth = (TextView) findViewById(R.id.circleMonth);
+        bank_info = (TextView) findViewById(R.id.bank_info);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle("");
         mToolbar.setNavigationIcon(R.drawable.back);
-
-        income = (TextView)findViewById(R.id.income);
-        outcome = (TextView)findViewById(R.id.outcome);
-        circleMonth = (TextView)findViewById(R.id.circleMonth);
-        bank_info = (TextView)findViewById(R.id.bank_info);
-
         mToolbar.setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -98,13 +100,12 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                 cdd.show();
 
 
-                bank_name = (EditText)cdd.findViewById(R.id.tv_bank_name);
-                bank_country = (EditText)cdd.findViewById(R.id.tv_bank_country);
-                bank_currency = (EditText)cdd.findViewById(R.id.tv_bank_currency);
-                bank_rout = (EditText)cdd.findViewById(R.id.tv_bank_routnumber);
-                bank_accnumber = (EditText)cdd.findViewById(R.id.tv_bank_accnumber);
-                bank_send = (TextView)cdd.findViewById(R.id.tv_back_ok);
-
+                bank_name = (EditText) cdd.findViewById(R.id.tv_bank_name);
+                bank_country = (EditText) cdd.findViewById(R.id.tv_bank_country);
+                bank_currency = (EditText) cdd.findViewById(R.id.tv_bank_currency);
+                bank_rout = (EditText) cdd.findViewById(R.id.tv_bank_routnumber);
+                bank_accnumber = (EditText) cdd.findViewById(R.id.tv_bank_accnumber);
+                bank_send = (TextView) cdd.findViewById(R.id.tv_back_ok);
 
 
             }
@@ -122,7 +123,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                 cdw.show();
 
 
-                amount = (EditText)cdw.findViewById(R.id.tv_withdraw_amount);
+                amount = (EditText) cdw.findViewById(R.id.tv_withdraw_amount);
 
             }
         });
@@ -131,18 +132,13 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
         state = 0;
 
 
-
-
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         mCircleProgressView3 = (CircleProgressView) findViewById(R.id.circle_progress_view3);
         mCircleProgressView3.setTextEnabled(false);
         mCircleProgressView3.setInterpolator(new AccelerateDecelerateInterpolator());
         mCircleProgressView3.setStartAngle(45);
         mCircleProgressView3.setProgressWithAnimation(0, 2000);
-
-
-
 
 
         routerDatas.add("January");
@@ -158,56 +154,59 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
         routerDatas.add("November");
         routerDatas.add("December");
 
-        recyclerAdapter = new MonthListAdapter(routerDatas,getApplicationContext(), this);
+        recyclerAdapter = new MonthListAdapter(routerDatas, getApplicationContext(), this);
         recyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
 
-
-
         AsynchbankInfo asynchbankInfo = new AsynchbankInfo();
         asynchbankInfo.execute();
+        dialog.show();
 
     }
 
     @Override
     public void sendToAdapter(String month) {
         Log.e("shani", "sendtomonth  called : ");
-        mCircleProgressView3.setProgressWithAnimation(0 , 2000);
+        mCircleProgressView3.setProgressWithAnimation(0, 2000);
         this.month = month;
-        String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
-        realm =Realm.getDefaultInstance();
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        realm = Realm.getDefaultInstance();
         RealmResults<WalletDataBase> record = realm.where(WalletDataBase.class).findAll();
-        for (int j = 0; j <months.length; j++) {
-            if(month.equals(months[j])){
+        for (int j = 0; j < months.length; j++) {
+            if (month.equals(months[j])) {
                 circleMonth.setText(months[j]);
-                int flag=0;
-                check=j+1;
-                for (int i = 0; i <record.size() ; i++) {
-                    try {
-                        if((record.get(i).getEmonth()).equals( "0"+check)){
+                int flag = 0;
+                check = j + 1;
+                for (int i = 0; i < record.size(); i++) {
 
+                    try {
+                        if ((record.get(i).getEmonth()).equals("0" + check)) {
+
+                            String mnth = record.get(i).getEmonth();
                             temEEarn = record.get(i).getEearning();
                             temDEarn = record.get(i).getDearning();
-                            income.setText("$ "+temEEarn+" USD");
-                            outcome.setText("$ "+temDEarn+" USD");
+                            income.setText("$ " + temEEarn + " USD");
+                            outcome.setText("$ " + temDEarn + " USD");
+                            Log.e("shani", " record Month earning  : " + mnth);
                             Log.e("shani", " record Month earning  : " + record.get(i).getEearning());
                             Log.e("shani", "record Month Withdraw : " + record.get(i).getDearning());
-                            flag=1;
-                            i=record.size();
-                            float e =Float.parseFloat(temEEarn);
-                            float d =Float.parseFloat(temDEarn);
-                            float ed = e+d;
-                            float progress =(e/ed)*100;
-                            mCircleProgressView3.setProgressWithAnimation(progress , 2000);
+                            flag = 1;
+                            i = record.size();
+
+                            float e = Float.parseFloat(temEEarn);
+                            float d = Float.parseFloat(temDEarn);
+                            float ed = e + d;
+                            float progress = (e / ed) * 100;
+                            mCircleProgressView3.setProgressWithAnimation(progress, 2000);
                         }
-                    }catch (NullPointerException e){
-                        Log.e("shani","null exception   if((record.get(i).getEmonth()).equals( \"0\"+check))...."+e.toString());
+                    } catch (NullPointerException e) {
+                        Log.e("shani", "null exception   if((record.get(i).getEmonth()).equals( \"0\"+check))...." + e.toString());
                     }
                 }
-                if(flag==0){
+                if (flag == 0) {
                     income.setText("Not Available");
                     outcome.setText("Not Available");
                 }
@@ -217,6 +216,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
 
 
     }
+
     @Override
     protected void onPause() {
 
@@ -231,29 +231,21 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
         protected String doInBackground(String... strings) {
 
 
-
-
             realm = Realm.getDefaultInstance();
-
-            if (realm.where(SignUpDatabase.class).count()>0){
-
-                RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
-                for (int i = 0; i < record.size(); i++) {
-                    tokenData = record.get(i).getToken();
-                }
-            }
+            WifiLenderData wifiLenderData = realm.where(WifiLenderData.class).findFirst();
+            tokenData = wifiLenderData.getToken();
+            realm.close();
 
             //for increase time to get response from server
             OkHttpClient client;
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(5, TimeUnit.MINUTES)
+           /* builder.connectTimeout(5, TimeUnit.MINUTES)
                     .writeTimeout(5, TimeUnit.MINUTES)
-                    .readTimeout(5, TimeUnit.MINUTES);
-
+                    .readTimeout(5, TimeUnit.MINUTES);*/
             client = builder.build();
 
             /// bank info start
-            if (state==1){
+            if (state == 1) {
 
                 RequestBody requestBody = new FormBody.Builder()
                         .add("lender[currency]", st_bank_currency)
@@ -289,9 +281,8 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
             /// bank info end
 
 
-
             ///// withdraw money start
-            if (state==2){
+            if (state == 2) {
 
                 RequestBody requestBody = new FormBody.Builder()
                         .add("lender[amount]", st_amount)
@@ -339,19 +330,18 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     realm.beginTransaction();
                     WalletDataBase walletDataBase = realm.createObject(WalletDataBase.class);
 
-          // {"wallet":{"earning":[],"withdraw":[],"balance":0}}
+                    // {"wallet":{"earning":[],"withdraw":[],"balance":0}}
 
                     String json_string = response.body().string();
                     Log.e("shani", "Wallet get response suuccessfull ====  : " + json_string);
                     JSONObject jsonobj = new JSONObject(json_string);
                     JSONObject wallet = jsonobj.getJSONObject("wallet");
 
-                    balance=wallet.getString("balance");
+                    balance = wallet.getString("balance");
 
-                    if (!balance.isEmpty()){
+                    if (!balance.isEmpty()) {
                         walletDataBase.setBalance(balance);
-                    }
-                    else {
+                    } else {
                         walletDataBase.setBalance("Balance Not Available");
                     }
 
@@ -359,7 +349,8 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                         @Override
                         public void run() {
                             String temblnc = balance;
-                            curr_balance.setText("$ "+temblnc+" USD");
+                            curr_balance.setText("$ " + temblnc + " USD");
+                            dialog.dismiss();
                         }
                     });
 
@@ -369,21 +360,24 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     for (int i = 0; i < earning.length(); i++) {
 
                         JSONObject earningObj = earning.getJSONObject(i);
-                       final String emonth = earningObj.getString("month");
-                       final String eearning = earningObj.getString("earning");
-                        if (!emonth.isEmpty() && !eearning.isEmpty()){
+                        final String emonth = earningObj.getString("month");
+                        final String eearning = earningObj.getString("earning");
+
+                        Log.e("shani", "record Month earning  jsonparsing : " + emonth);
+                        Log.e("shani", "record Month earning jsonparsing : " + eearning);
+                        if (!emonth.isEmpty() && !eearning.isEmpty()) {
                             walletDataBase.setEmonth(emonth);
+
                             walletDataBase.setEearning(eearning);
 
-                            if (emonth.equals("01")){
+                            if (emonth.equals("01")) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        income.setText("$ "+eearning+" USD");
+                                        income.setText("$ " + eearning + " USD");
                                     }
                                 });
-                            }
-                            else{
+                            } else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -391,30 +385,29 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                                     }
                                 });
                             }
+                            Log.e("shani", "record Month earning  jsonparsing : " + emonth);
+                            Log.e("shani", "record Month earning jsonparsing : " + eearning);
                         }
-                        Log.e("shani", "record Month earning  jsonparsing : " +emonth);
-                        Log.e("shani", "record Month earning jsonparsing : " +eearning );
 
                     }
                     JSONArray withdraw = wallet.getJSONArray("withdraw");
-                    for (int i = 0; i <withdraw.length() ; i++) {
+                    for (int i = 0; i < withdraw.length(); i++) {
 
                         JSONObject withdrawObj = withdraw.getJSONObject(i);
 
                         String dmonth = withdrawObj.getString("month");
                         final String dearning = withdrawObj.getString("earning");
-                        if (!dearning.isEmpty()){
+                        if (!dearning.isEmpty()) {
                             walletDataBase.setDmonth(dmonth);
                             walletDataBase.setDearning(dearning);
-                            if (dmonth.equals("01")){
+                            if (dmonth.equals("01")) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        outcome.setText("$ "+dearning+" USD");
+                                        outcome.setText("$ " + dearning + " USD");
                                     }
                                 });
-                            }
-                            else{
+                            } else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -423,14 +416,12 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                                 });
                             }
                         }
-                        Log.e("shani", "record Month withdraw  jsonparsing : " +dmonth);
-                        Log.e("shani", "record Month Withdraw jsonparsing : " +dearning );
+                        Log.e("shani", "record Month withdraw  jsonparsing : " + dmonth);
+                        Log.e("shani", "record Month Withdraw jsonparsing : " + dearning);
 
                     }
                     realm.commitTransaction();
-
-
-
+                    realm.close();
 
 
                 } else {
@@ -442,8 +433,6 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
 
 
             return null;
@@ -500,25 +489,22 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     st_bank_rout = bank_rout.getText().toString();
                     st_bank_accnumber = bank_accnumber.getText().toString();
 
-                    if (st_bank_name.length()<1){
+                    if (st_bank_name.length() < 1) {
 
                         Toast.makeText(getApplicationContext(), "Please Enter Bank Name", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (st_bank_currency.length()<1){
+                    } else if (st_bank_currency.length() < 1) {
 
                         Toast.makeText(getApplicationContext(), "Please specify Currency", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (st_bank_country.length()<1){
+                    } else if (st_bank_country.length() < 1) {
 
                         Toast.makeText(getApplicationContext(), "Please specify Country Name", Toast.LENGTH_SHORT).show();
-                    }else if (st_bank_rout.length()<1){
+                    } else if (st_bank_rout.length() < 1) {
 
                         Toast.makeText(getApplicationContext(), "Please Enter Rout", Toast.LENGTH_SHORT).show();
-                    }else if (st_bank_accnumber.length()<1){
+                    } else if (st_bank_accnumber.length() < 1) {
 
                         Toast.makeText(getApplicationContext(), "Please Enter Account Number", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
 
                         AsynchbankInfo asynchbankInfo = new AsynchbankInfo();
                         asynchbankInfo.execute();
@@ -564,7 +550,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                 case R.id.tv_withdraw_submit:
 
 
-                    realm =Realm.getDefaultInstance();
+                    realm = Realm.getDefaultInstance();
                     RealmResults<WalletDataBase> record = realm.where(WalletDataBase.class).findAll();
                     for (int i = 0; i < record.size(); i++) {
                         cr_blnc = record.get(i).getBalance();
@@ -576,15 +562,13 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     double crblnc = Double.parseDouble(cr_blnc);
 
 
-                    if (amnt<10){
+                    if (amnt < 10) {
 
                         Toast.makeText(getApplicationContext(), "Minimum Amount Should $10", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (amnt >= crblnc){
+                    } else if (amnt >= crblnc) {
 
-                        Toast.makeText(getApplicationContext(), "You Have Only $"+cr_blnc+" USD", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                        Toast.makeText(getApplicationContext(), "You Have Only $" + cr_blnc + " USD", Toast.LENGTH_SHORT).show();
+                    } else {
 
                         AsynchbankInfo asynchbankInfo = new AsynchbankInfo();
                         asynchbankInfo.execute();
@@ -592,7 +576,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                         dismiss();
 
                     }
-
+                    realm.close();
 
 
                     break;

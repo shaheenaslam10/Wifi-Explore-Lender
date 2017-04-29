@@ -8,44 +8,46 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="100">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:layout_height="58dp"
 
-            <ImageView
-                android:id="@+id/addLocationBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX=".8"
-                android:scaleY=".8"
-                android:layout_gravity="center"
-                android:src="@drawable/back" />
 
-            <TextView
+            android:minHeight="?attr/actionBarSize"
+            android:titleTextColor="@color/white"
+            android:weightSum="1">
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="100">
 
-                android:text="Add Location"
-                android:textColor="@color/white"
-                android:textSize="25dp" />
+                <TextView
+                    android:id="@+id/toll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="8mm"
+                    android:text="Add Location"
+                    android:textColor="@color/white"
+                    android:textSize="22dp" />
 
-        </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
+
             android:background="@color/white" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,21 +78,21 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="400">
+                        android:layout_weight="400"
+                        android:orientation="vertical">
 
                         <EditText
+                            android:id="@+id/textView"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_margin="15dp"
-                            android:id="@+id/textView"
                             android:drawableLeft="@drawable/search"
                             android:drawablePadding="10dp"
-                            android:hint="Specific Area Search"
-                            android:paddingLeft="13dp"
+                            android:hint="Router Location"
                             android:imeActionLabel="Go"
                             android:imeOptions="actionGo"
                             android:maxLines="1"
+                            android:paddingLeft="13dp"
                             android:singleLine="true"
                             android:textSize="15dp" />
 
@@ -107,18 +109,82 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                            xmlns:map="http://schemas.android.com/apk/res-auto"
-                            xmlns:tools="http://schemas.android.com/tools"
-                            android:id="@+id/map"
-                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            tools:context="com.zaingz.holygon.qarifinder.MainActivity" />
+                            android:orientation="vertical"
+                            android:weightSum="100">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:id="@+id/map"
+                                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+
+                                    android:clickable="false"
+                                    tools:context="com.example.muhammadshan.comwhatsheremuhammadshan.MapsActivity" />
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true">
+
+                                    <LinearLayout
+                                        android:id="@+id/locationMarker"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginBottom="6dp"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/locationMarkertext"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="25dp"
+                                            android:background="@color/white"
+                                            android:gravity="center"
+                                            android:minWidth="180dp"
+                                            android:paddingLeft="2dp"
+                                            android:paddingRight="2dp"
+                                            android:text="SETUP PICKUP LOCATION"
+                                            android:textColor="@android:color/black" />
+
+                                        <ImageView
+                                            android:id="@+id/imageView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:scaleX=".8"
+                                            android:scaleY=".8"
+                                            android:src="@drawable/markerlocation" />
+                                    </LinearLayout>
 
 
+                                </FrameLayout>
+                            </RelativeLayout>
+                        </LinearLayout>
 
 
+                        <TextView
+                            android:id="@+id/tv_set_location"
+                            android:layout_width="200dp"
+                            android:layout_height="35dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="50dp"
+                            android:background="@drawable/rounded_info_shape"
+                            android:gravity="center"
+                            android:text="Set Location"
+                            android:textColor="#000000"
+                            android:textSize="14dp" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -135,8 +201,8 @@
         android:id="@+id/frame_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
         android:layout_marginTop="100dp"
         >
 

@@ -1,6 +1,7 @@
 package com.zaingz.holygon.wifi_explorelender.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zaingz.holygon.wifi_explorelender.DataModel.RoutersModel;
+import com.zaingz.holygon.wifi_explorelender.MyDevicesActivity;
 import com.zaingz.holygon.wifi_explorelender.R;
 
 import java.util.ArrayList;
 
-import static android.support.v7.recyclerview.R.styleable.RecyclerView;
+import io.realm.Realm;
 
 /**
  * Created by Muhammad Shan on 11/04/2017.
@@ -24,7 +26,9 @@ public class RoutersListAdapter extends android.support.v7.widget.RecyclerView.A
 
 
     ArrayList<RoutersModel> routerDatas = new ArrayList<RoutersModel>();
+    Intent intent;
     Context context;
+    Realm realm;
 
     public RoutersListAdapter(ArrayList<RoutersModel> routerDatas, Context context) {
         this.routerDatas = routerDatas;
@@ -39,15 +43,29 @@ public class RoutersListAdapter extends android.support.v7.widget.RecyclerView.A
     }
 
     @Override
-    public void onBindViewHolder(RecyclerHolder holder, int position) {
+    public void onBindViewHolder(RecyclerHolder holder, final int position) {
 
-        RoutersModel routerData = routerDatas.get(position);
+
+        final RoutersModel routerData = routerDatas.get(position);
         Log.d("shani","routerdata name  :   "+routerData.getName());
         holder.name.setText(routerData.getName());
         Log.d("shani"," after set text  routerdata name  :   "+routerData.getName());
         holder.signal.setText(routerData.getSignal_strength());
         holder.rating.setText(routerData.getRating());
         holder.count.setText(routerData.getDevices());
+        holder.rowRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                intent = new Intent(context, MyDevicesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("namrouter", routerData.getName());
+                intent.putExtra("idrouterlist", routerData.getId());
+                context.startActivity(intent);
+
+            }
+        });
+
 
        /* if (position%2 == 0) {
             holder.rowRoot.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));

@@ -2,8 +2,8 @@ package com.zaingz.holygon.wifi_explorelender;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,14 +14,13 @@ import android.widget.Toast;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 import com.zaingz.holygon.wifi_explorelender.Valoidators.Validations;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import okhttp3.FormBody;
@@ -148,9 +147,7 @@ public class SignupActivity extends AppCompatActivity {
             OkHttpClient client;
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.connectTimeout(5, TimeUnit.MINUTES)
-                    .writeTimeout(5, TimeUnit.MINUTES)
-                    .readTimeout(5, TimeUnit.MINUTES);
+
 
             client = builder.build();
 
@@ -188,15 +185,17 @@ public class SignupActivity extends AppCompatActivity {
 
                     realm = Realm.getDefaultInstance();
 
-                    if (realm.where(SignUpDatabase.class).count() > 0) {
+                    if (realm.where(WifiLenderData.class).count() > 0) {
                         realm.beginTransaction();
-                        realm.deleteAll();
+                        realm.clear(WifiLenderData.class);
                         realm.commitTransaction();
+                        Log.e("shani", "All data deleted : ");
+
                     }
 
 
                     realm.beginTransaction();
-                    SignUpDatabase signupData = realm.createObject(SignUpDatabase.class);
+                    WifiLenderData signupData = realm.createObject(WifiLenderData.class);
                     signupData.setName(jname);
                     signupData.setEmail(jemail);
                     signupData.setMobile_number(jmobile_number);
@@ -208,8 +207,8 @@ public class SignupActivity extends AppCompatActivity {
                    runOnUiThread(new Runnable() {
                        @Override
                        public void run() {
-                           Toast.makeText(SignupActivity.this, "Kindly Sign In", Toast.LENGTH_SHORT).show();
-                           Intent intent = new Intent(SignupActivity.this,LoginActivity.class);
+                           // Toast.makeText(SignupActivity.this, "Kindly Sign In", Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                            finish();
                            startActivity(intent);
                        }

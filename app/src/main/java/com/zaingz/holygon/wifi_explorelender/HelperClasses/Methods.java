@@ -1,16 +1,16 @@
 package com.zaingz.holygon.wifi_explorelender.HelperClasses;
 
-        import android.content.Context;
-        import android.location.Address;
-        import android.location.Geocoder;
-        import android.util.Log;
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.util.Log;
 
-        import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 
-        import java.io.IOException;
-        import java.text.DecimalFormat;
-        import java.util.ArrayList;
-        import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Created by Muhammad Shan on 21/02/2017.
@@ -69,5 +69,30 @@ public class Methods {
         DecimalFormat df = new DecimalFormat("#.##");
         twoDigits = Double.valueOf(df.format(value));
         return  twoDigits;
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
     }
 }

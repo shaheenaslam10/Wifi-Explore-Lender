@@ -7,6 +7,7 @@ package com.zaingz.holygon.wifi_explorelender.Database;
  */
 
 public class RouterGetList extends RealmObject {
+    String id;
     String name;
     String ssid;
     String address;
@@ -20,7 +21,13 @@ public class RouterGetList extends RealmObject {
 
     public RouterGetList(){}
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }

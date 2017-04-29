@@ -3,8 +3,8 @@ package com.zaingz.holygon.wifi_explorelender;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
-import com.zaingz.holygon.wifi_explorelender.Database.SignUpDatabase;
+import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
         mobile = (TextView)findViewById(R.id.txt_profile_mobile);
 
         realm = Realm.getDefaultInstance();
-        RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
+        RealmResults<WifiLenderData> record = realm.where(WifiLenderData.class).findAll();
         for (int i = 0; i < record.size(); i++) {
             name.setText(record.get(i).getName());
             email.setText(record.get(i).getEmail());
@@ -123,9 +123,9 @@ public class ProfileActivity extends AppCompatActivity {
 
             realm = Realm.getDefaultInstance();
 
-            if (realm.where(SignUpDatabase.class).count()>0){
+            if (realm.where(WifiLenderData.class).count() > 0) {
 
-                RealmResults<SignUpDatabase> record = realm.where(SignUpDatabase.class).findAll();
+                RealmResults<WifiLenderData> record = realm.where(WifiLenderData.class).findAll();
                 for (int i = 0; i < record.size(); i++) {
                     tokenData = record.get(i).getToken();
                 }
