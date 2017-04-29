@@ -43,6 +43,9 @@ public class MyDevicesActivity extends AppCompatActivity {
     String[] months;
     String[] earnings;
     LineGraphSeries<DataPoint> series;
+    DataPoint v;
+    int count = 12;
+    DataPoint[] values;
     StaticLabelsFormatter staticLabelsFormatter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class MyDevicesActivity extends AppCompatActivity {
         total_money = (TextView) findViewById(R.id.total_money);
         toolbar_device_count = (TextView) findViewById(R.id.toolbar_device_count);
 
+
         Intent intent = getIntent();
         String intntrouterName = intent.getStringExtra("namrouter");
         String intRouterIdList = intent.getStringExtra("idrouterlist");
@@ -89,12 +93,13 @@ public class MyDevicesActivity extends AppCompatActivity {
         graph = (GraphView) findViewById(R.id.graph);
 
 
-       /* staticLabelsFormatter = new StaticLabelsFormatter(graph);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
-        staticLabelsFormatter.setVerticalLabels(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+        staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"});
+        staticLabelsFormatter.setVerticalLabels(new String[]{"$0", "$10", "$20", "$30", "$40", "$50", "$60", "$70", "$70", "$80", "$90", "$100"});
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);*/
 
+        values = new DataPoint[12];
 
 
        /* graph.getViewport().setScrollable(true);
@@ -122,6 +127,7 @@ public class MyDevicesActivity extends AppCompatActivity {
         AsynchAllDeviceData asynchAllDeviceData = new AsynchAllDeviceData();
         asynchAllDeviceData.execute();
         dialog.show();
+
 
         // use static labels for horizontal and vertical labels
 
@@ -226,48 +232,32 @@ public class MyDevicesActivity extends AppCompatActivity {
                         month = jsonObject1.getString("month");
                         earning = jsonObject1.getString("earning");
 
-                        final int finalI = i;
+                        Log.e("shani", "after response  month values :..." + month);
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //  String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
                                 String[] monthssss = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
                                 for (int j = 0; j < monthssss.length; j++) {
-                                    if (monthssss[finalI] == month) {
+                                    Log.e("shani", "for loop j count  ..." + j);
+                                    Log.e("shani", "for loop monthssss[j]  ..." + monthssss[j] + "=====" + month);
+                                    if (monthssss[j].equals(month)) {
                                         //  Float d = Float.parseFloat(month);
-                                        Integer m = Integer.parseInt(earning);
+                                        Log.e("shani", "month  natched...");
+                                        Float m = Float.parseFloat(earning);
+                                        v = new DataPoint(j + 1, m);
+                                        Log.e("shani", "data point v ..." + v);
 
-                                        series = new LineGraphSeries<>(new DataPoint[]{
+                                        values[j] = v;
 
-                                                new DataPoint(j + 1, 2),
-                                                new DataPoint(j + 1, 3),
-                                                new DataPoint(j + 1, 4),
-                                                new DataPoint(j + 1, 5),
-                                                new DataPoint(j + 1, 6),
-                                                new DataPoint(j + 1, 7)
-
-
-                                        });
-
+                                        Log.e("shani", "data point vlaues ..." + values[j]);
                                         Log.e("shani", "series........" + series);
-                                    } else {
-
-                                        series = new LineGraphSeries<>(new DataPoint[]{
-
-                                                new DataPoint(j + 1, 0)
-
-
-                                        });
+                                        Log.e("shani", "j........" + j);
                                     }
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            graph.addSeries(series);
-
-                                        }
-                                    });
 
                                 }
+
                             }
                         });
 
@@ -277,12 +267,6 @@ public class MyDevicesActivity extends AppCompatActivity {
                           /*  months[i]=month;
                             earnings[i]=earning;
 */
-
-
-
-
-
-
 
                        /* final int finalI = i;
                         runOnUiThread(new Runnable() {
@@ -308,11 +292,25 @@ public class MyDevicesActivity extends AppCompatActivity {
                             }
                         });*/
 
-
-
-
                     }
+                    for (int k = 0; k < 12; k++) {
+                        if (values[k] == null) {
+                            v = new DataPoint(k + 1, 0);
+                            values[k] = v;
+                        }
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            series = new LineGraphSeries<DataPoint>(values);
+                            Log.e("shani", "seriesin UI thread series = new LineGraphSeries<>(values);........" + series.toString());
+                            graph.addSeries(series);
+                            series.setColor(getResources().getColor(R.color.green_light));
 
+                            series.setDataPointsRadius(10);
+
+                        }
+                    });
 
                 } else {
                     Log.e("shani", "Total Earnings get response unsuccessful : " + response.toString());
