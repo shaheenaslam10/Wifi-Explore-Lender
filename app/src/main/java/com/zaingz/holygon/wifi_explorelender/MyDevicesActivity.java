@@ -9,12 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.zaingz.holygon.wifi_explorelender.Database.RouterGetList;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
 
 import org.json.JSONArray;
@@ -24,7 +27,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,8 +35,8 @@ public class MyDevicesActivity extends AppCompatActivity {
 
     Realm realm;
     String tokenDataf;
-    TextView updata, downdata, ratings, connected, routers, total_money, toolbar_device_count, toolTitle;
-    String st_updata, st_downdata, st_ratings, st_connected, st_total_money;
+    TextView updata, downdata, ratings, connected, report, total_money, toolbar_device_count, toolTitle;
+    String st_updata, st_downdata, st_ratings, st_connected, st_total_money, st_reports;
     String month, earning;
     String device_count;
     ProgressDialog dialog;
@@ -72,7 +74,7 @@ public class MyDevicesActivity extends AppCompatActivity {
         downdata = (TextView) findViewById(R.id.down_data);
         ratings = (TextView) findViewById(R.id.rating);
         connected = (TextView) findViewById(R.id.connected);
-        routers = (TextView) findViewById(R.id.routers);
+        report = (TextView) findViewById(R.id.report);
         total_money = (TextView) findViewById(R.id.total_money);
         toolbar_device_count = (TextView) findViewById(R.id.toolbar_device_count);
 
@@ -98,36 +100,30 @@ public class MyDevicesActivity extends AppCompatActivity {
         staticLabelsFormatter.setVerticalLabels(new String[]{"$0", "$10", "$20", "$30", "$40", "$50", "$60", "$70", "$70", "$80", "$90", "$100"});
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
+       /* graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-150);
+        graph.getViewport().setMaxY(150);
 
-        values = new DataPoint[12];
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(10);
+        graph.getViewport().setMaxX(100);
 
-
-       /* graph.getViewport().setScrollable(true);
-        graph.getViewport().setScrollableY(true);
+        // enable scaling and scrolling
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);*/
 
 
-        // custom label formatter to show currency "EUR"
-       /* graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueY) {
-                if (isValueY) {
-                    // show normal x values
-                    return super.formatLabel(value, isValueY);
-                } else {
-                    // show currency for y values
-                    return  "$ "+super.formatLabel(value, isValueY);
-                }
-            }
-        });
-*/
+        values = new DataPoint[12];
 
 
-        AsynchAllDeviceData asynchAllDeviceData = new AsynchAllDeviceData();
-        asynchAllDeviceData.execute();
-        dialog.show();
+        if (idd != null) {
 
+            AsynchAllDeviceData asynchAllDeviceData = new AsynchAllDeviceData();
+            asynchAllDeviceData.execute();
+            dialog.show();
+        } else {
+            Toast.makeText(this, "No router Added Yet", Toast.LENGTH_SHORT).show();
+        }
 
         // use static labels for horizontal and vertical labels
 
@@ -148,7 +144,7 @@ public class MyDevicesActivity extends AppCompatActivity {
 
 
             realm = Realm.getDefaultInstance();
-            WifiLenderData record = realm.where(WifiLenderData.class).findFirst();
+            final WifiLenderData record = realm.where(WifiLenderData.class).findFirst();
             tokenDataf = record.getToken();
             realm.close();
 
@@ -192,7 +188,7 @@ public class MyDevicesActivity extends AppCompatActivity {
                         }
                     });
 
-
+///// {"earning":{"rating":3,"download_data":24.0,"upload_data":8.0,"connections":1,"connected_users":1,"total_earnings":47.0,"reports":0,"monthly_earning":[{"month":"04","earning":47.0}]}}
 
 
                     st_ratings = jsonObject.getString("rating");
@@ -200,6 +196,7 @@ public class MyDevicesActivity extends AppCompatActivity {
                     st_updata = jsonObject.getString("upload_data");
                     st_connected = jsonObject.getString("connections");
                     st_total_money = jsonObject.getString("total_earnings");
+                    st_reports = jsonObject.getString("reports");
 
 
                     runOnUiThread(new Runnable() {
@@ -211,14 +208,9 @@ public class MyDevicesActivity extends AppCompatActivity {
                             connected.setText(st_connected);
                             total_money.setText("$" + st_total_money + " USD");
                             toolbar_device_count.setText(st_connected);
+                            report.setText(st_reports);
 
-                            realm = Realm.getDefaultInstance();
-                            RealmResults<RouterGetList> record = realm.where(RouterGetList.class).findAll();
-                            for (int i = 0; i < record.size(); i++) {
-                                String cnn = record.get(i).getConnections();
-                                routers.setText(cnn);
 
-                            }
                         }
                     });
 
@@ -306,18 +298,27 @@ public class MyDevicesActivity extends AppCompatActivity {
                             Log.e("shani", "seriesin UI thread series = new LineGraphSeries<>(values);........" + series.toString());
                             graph.addSeries(series);
                             series.setColor(getResources().getColor(R.color.green_light));
-
                             series.setDataPointsRadius(10);
 
+                            series.setOnDataPointTapListener(new OnDataPointTapListener() {
+                                @Override
+                                public void onTap(Series series, DataPointInterface dataPoint) {
+
+                                    Toast.makeText(MyDevicesActivity.this, "DataPoint --->  " + dataPoint, Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
                         }
                     });
 
                 } else {
                     Log.e("shani", "Total Earnings get response unsuccessful : " + response.toString());
+                    dialog.dismiss();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("shani", "Total Earnings get response failure exception e  : " + e.toString());
+                dialog.dismiss();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

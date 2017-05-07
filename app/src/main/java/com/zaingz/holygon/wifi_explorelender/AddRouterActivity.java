@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.zaingz.holygon.wifi_explorelender.API.URLs;
 import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
+import com.zaingz.holygon.wifi_explorelender.Valoidators.Validations;
 
 import java.io.IOException;
 import java.util.List;
@@ -112,16 +113,22 @@ public class AddRouterActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Validations.isLocationEnabled(getApplicationContext())) {
+                    Intent intent = new Intent(AddRouterActivity.this, AddLocationActivity.class);
+                    intent.putExtra("namego", ed_name.getText().toString());
+                    intent.putExtra("ssidgo", ed_ssid.getText().toString());
+                    intent.putExtra("passwordgo", ed_security.getText().toString());
+                    intent.putExtra("securitygo", ed_name.getText().toString());
+                    intent.putExtra("pricego", ed_price.getText().toString());
+                    intent.putExtra("speedgo", ed_avspeed.getText().toString());
+                    Log.e("shani", "putextra from addrouter: " + ed_name);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.pull_in_left, R.animator.pull_in_right);
+                } else {
+                    Toast.makeText(AddRouterActivity.this, "Please Enable your GPS location.", Toast.LENGTH_SHORT).show();
+                }
 
-                Intent intent = new Intent(AddRouterActivity.this, AddLocationActivity.class);
-                intent.putExtra("namego",ed_name.getText().toString());
-                intent.putExtra("ssidgo",ed_ssid.getText().toString());
-                intent.putExtra("passwordgo",ed_security.getText().toString());
-                intent.putExtra("securitygo",ed_name.getText().toString());
-                intent.putExtra("pricego",ed_price.getText().toString());
-                intent.putExtra("speedgo",ed_avspeed.getText().toString());
-                Log.e("shani","putextra from addrouter: "+ed_name);
-                startActivity(intent);
+
             }
         });
 

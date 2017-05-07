@@ -41,6 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 realm.close();
                 startActivity(mainIntent);
+                finish();
 
             }
         },2000);

@@ -17,4 +17,5 @@ public class URLs {
     public static final String WITHDRAW = BASE_URL+"/lender/withdraw.json";
     public static final String EARNINGS = BASE_URL+"/lender/earning.json";
     public static final String PASSWORD = BASE_URL+"/lender/password.json";
+    public static final String FORGOT_PASSWORD = BASE_URL + "/lender/forget_password.json";
 }

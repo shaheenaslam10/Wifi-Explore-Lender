@@ -2,6 +2,7 @@ package com.zaingz.holygon.wifi_explorelender;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,12 +33,14 @@ import okhttp3.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    EditText edit_pass,first_pass,second_pass;
-    String st_first_pass,st_second_pass;
+    EditText edit_pass, first_pass, second_pass, mobile, ed_first_mobile, ed_second_mobile;
+    String st_first_pass, st_second_pass, st_ed_first_mobile, st_ed_second_mobile;
     CustomDialogChangePass cdcp;
+    CustomDialogChangeNumber cdcn;
     Realm realm;
     String tokenData;
-    TextView name,email,mobile;
+    String device_count;
+    TextView name, email, devices, num_users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +61,10 @@ public class ProfileActivity extends AppCompatActivity {
         );
         name = (TextView)findViewById(R.id.txt_profile_name);
         email = (TextView)findViewById(R.id.txt_profile_mail);
-        mobile = (TextView)findViewById(R.id.txt_profile_mobile);
+        mobile = (EditText) findViewById(R.id.txt_profile_mobile);
+        // mobile.setEnabled(false);
+        devices = (TextView) findViewById(R.id.numof_routers);
+        num_users = (TextView) findViewById(R.id.num_of_users);
 
         realm = Realm.getDefaultInstance();
         RealmResults<WifiLenderData> record = realm.where(WifiLenderData.class).findAll();
@@ -67,12 +73,17 @@ public class ProfileActivity extends AppCompatActivity {
             email.setText(record.get(i).getEmail());
             mobile.setText(record.get(i).getMobile_number());
         }
+        Intent intent = getIntent();
+        devices.setText(intent.getStringExtra("device_count_profile"));
+        num_users.setText(intent.getStringExtra("users_count_profile"));
+
 
 
 
 
 
         edit_pass = (EditText)findViewById(R.id.profile_edit);
+        // edit_pass.setEnabled(false);
 
         edit_pass.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -97,6 +108,34 @@ public class ProfileActivity extends AppCompatActivity {
                         second_pass = (EditText)cdcp.findViewById(R.id.ed_second_pass);
 
 
+
+
+                    }
+                }
+                return false;
+            }
+        });
+        mobile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (event.getRawX() >= (mobile.getRight() - mobile.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+
+
+                        cdcn = new CustomDialogChangeNumber(ProfileActivity.this);
+                        Window window = cdcn.getWindow();
+                        window.setGravity(Gravity.CENTER);
+                        cdcn.show();
+
+                       /* ed_first_mobile = (EditText)cdcp.findViewById(R.id.ed_first_mobile);
+                        ed_second_mobile = (EditText)cdcp.findViewById(R.id.ed_second_mobile);
+*/
 
 
                     }
@@ -230,9 +269,64 @@ public class ProfileActivity extends AppCompatActivity {
 
                         AsynchTaskEditPass asynchTaskEditPass = new AsynchTaskEditPass();
                         asynchTaskEditPass.execute();
-                        Toast.makeText(getApplicationContext(), "Your Are Logged out", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Password Successfuly Changed..", Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
+
+
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    public class CustomDialogChangeNumber extends Dialog implements
+            android.view.View.OnClickListener {
+
+        public Activity c;
+        public Dialog d;
+        public TextView yes;
+
+        public CustomDialogChangeNumber(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.change_number);
+            yes = (TextView) findViewById(R.id.tv_change_mobile);
+            yes.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_change_mobile:
+
+
+
+                 /*   st_ed_first_mobile = first_pass.getText().toString();
+                    st_ed_second_mobile = second_pass.getText().toString();
+
+                    if (first_pass.getText().toString().length() < 1) {
+                        Toast.makeText(ProfileActivity.this, "Please Enter First Password", Toast.LENGTH_SHORT).show();
+                    }else if (second_pass.getText().toString().length() < 1) {
+                        Toast.makeText(ProfileActivity.this, "Please Enter Second Password", Toast.LENGTH_SHORT).show();
+                    } else {
+
+
+                        AsynchTaskEditPass asynchTaskEditPass = new AsynchTaskEditPass();
+                        asynchTaskEditPass.execute();
+                        Toast.makeText(getApplicationContext(), "Password Successfuly Changed..", Toast.LENGTH_SHORT).show();
+                        dismiss();
+                    }*/
 
 
 

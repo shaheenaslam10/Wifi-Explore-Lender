@@ -83,44 +83,44 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (Validations.checkConnection(getApplicationContext())) {
+                    if (edit_name.getText().toString().length() < 1) {
 
-                if (edit_name.getText().toString().length() < 1) {
-
-                    Toast.makeText(SignupActivity.this, "Name can't be Empty", Toast.LENGTH_SHORT).show();
-                } else if (edit_email.getText().toString().length() < 1) {
-                    Toast.makeText(SignupActivity.this, "Email can't be Empty", Toast.LENGTH_SHORT).show();
-                } else if (!(Validations.isEmailValid(edit_email.getText().toString()))) {
-                    edit_email.setText(null);
-                    Toast.makeText(SignupActivity.this, "Email is not valid", Toast.LENGTH_SHORT).show();
-                } /*else if (pass.getText().toString().length() < 1) {
+                        Toast.makeText(SignupActivity.this, "Name can't be Empty", Toast.LENGTH_SHORT).show();
+                    } else if (edit_email.getText().toString().length() < 1) {
+                        Toast.makeText(SignupActivity.this, "Email can't be Empty", Toast.LENGTH_SHORT).show();
+                    } else if (!(Validations.isEmailValid(edit_email.getText().toString()))) {
+                        edit_email.setText(null);
+                        Toast.makeText(SignupActivity.this, "Email is not valid", Toast.LENGTH_SHORT).show();
+                    } /*else if (pass.getText().toString().length() < 1) {
                     Processing.myToast(getApplicationContext(), " Password can't be empty");
                 } */ else if (edit_mobile.getText().toString().length() < 1) {
-                    Toast.makeText(SignupActivity.this, "Mobile Number can't be Empty", Toast.LENGTH_SHORT).show();
-                } /*else if (!(phoneNumber.matches("[+][0-9]+"))) {
+                        Toast.makeText(SignupActivity.this, "Mobile Number can't be Empty", Toast.LENGTH_SHORT).show();
+                    } /*else if (!(phoneNumber.matches("[+][0-9]+"))) {
                     Processing.myToast(getApplicationContext(), "Number format not corrected");
-                } */
-                else if(edit_password.getText().toString().length() < 1 ) {
-                    Toast.makeText(SignupActivity.this, "Please enter password...", Toast.LENGTH_SHORT).show();
-                }
+                } */ else if (edit_password.getText().toString().length() < 1) {
+                        Toast.makeText(SignupActivity.this, "Please enter password...", Toast.LENGTH_SHORT).show();
+                    }
                     else if(edit_password.getText().toString().length() < 6 ) {
-                    Toast.makeText(SignupActivity.this, "Password is short, minimum 6 characters", Toast.LENGTH_SHORT).show();
-                }
+                        Toast.makeText(SignupActivity.this, "Password is short, minimum 6 characters", Toast.LENGTH_SHORT).show();
+                    } else {
 
-                else {
+                        Log.e("shani", "In else part: ");
 
-                    Log.e("shani", "In else part: " );
+                        btn_login.setVisibility(View.INVISIBLE);
+                        progressView.setVisibility(View.VISIBLE);
 
-                    btn_login.setVisibility(View.INVISIBLE);
-                    progressView.setVisibility(View.VISIBLE);
+                        st_edit_name = edit_name.getText().toString();
+                        st_edit_email = edit_email.getText().toString();
+                        st_edit_mobile = edit_mobile.getText().toString();
+                        st_edit_password = edit_password.getText().toString();
 
-                    st_edit_name = edit_name.getText().toString();
-                    st_edit_email = edit_email.getText().toString();
-                    st_edit_mobile = edit_mobile.getText().toString();
-                    st_edit_password = edit_password.getText().toString();
+                        AsynchTaskDownload asynchTaskDownload = new AsynchTaskDownload();
+                        asynchTaskDownload.execute();
 
-                    AsynchTaskDownload asynchTaskDownload = new AsynchTaskDownload();
-                    asynchTaskDownload.execute();
-
+                    }
+                } else {
+                    Toast.makeText(SignupActivity.this, "Check Your Internet Connection.", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -132,7 +132,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
 
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(R.animator.pull_in_right, R.animator.puch_out_left);
         super.onPause();
     }
 
@@ -231,6 +231,13 @@ public class SignupActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("shani", "post response failure: " + e.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_login.setVisibility(View.VISIBLE);
+                        progressView.setVisibility(View.INVISIBLE);
+                    }
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -207,45 +207,20 @@ public class AddLocationActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                goPakistan();
+                if (!v.getText().toString().isEmpty()) {
+                    p_address = v.getText().toString();
+                    Log.e("shani", "p_address on Go click  : " + p_address);
+                    goPakistan();
+                }
+                else {
+                    Toast.makeText(AddLocationActivity.this, "Enter Address or Select from Map or List", Toast.LENGTH_SHORT).show();
+                }
+
 
                 return false;
             }
         });
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               /* if (textView.getText().length()>1){
 
-                    search = Methods.getLocationFromAddress(getApplicationContext(), p_address);
-                    Log.e("shani"," new  method search , get from location  : "+search);
-                    lat_extar = search.latitude;
-                    lng_extar = search.longitude;
-
-                    Log.e("shani","lat from address : "+lat_extar);
-                    Log.e("shani","lng from address : "+lng_extar);
-                }
-                else {
-                    Toast.makeText(AddLocationActivity.this, "Please Enter text", Toast.LENGTH_SHORT).show();
-                }*/
-
-
-            }
-        });
-
-        /*if (lat_extar.toString().length()<1 && lng_extar.toString().length()<1){
-
-            Toast.makeText(this, "lat lng not get", Toast.LENGTH_SHORT).show();
-
-        }
-        else {
-
-            Intent intent = new Intent(AddLocationActivity.this,AddRouterActivity.class);
-            intent.putExtra("_lat",lat_extar);
-            intent.putExtra("_lng",lng_extar);
-            finish();
-            startActivity(intent);
-        }*/
 
     }
 
@@ -253,6 +228,7 @@ public class AddLocationActivity extends FragmentActivity implements OnMapReadyC
     protected void onPause() {
 
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(android.R.anim.fade_in, R.animator.puch_out_right);
         super.onPause();
     }
 
@@ -644,10 +620,10 @@ public class AddLocationActivity extends FragmentActivity implements OnMapReadyC
                 locationMarkertext.setText(address);
 
                 p_address = address;
-                runOnUiThread(new Runnable() {
+               /* runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-/*mMap.clear();
+mMap.clear();
                         mp = new MarkerOptions();
                         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
                         mp.position(new LatLng(x, y));
@@ -655,16 +631,16 @@ public class AddLocationActivity extends FragmentActivity implements OnMapReadyC
                         mp.icon(icon);
                         mMap.addMarker(mp);
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(x,y), 16));*/
+                                new LatLng(x,y), 16));
                         //  markerLayout.setVisibility(View.INVISIBLE);
                     }
                 });
-               /* if(c==3){
+               *//* if(c==3){
                     markerText.setText(get);
-                }*/
-         /*       if(c==2){
-                textView2.setText(address);}*/
-                //   textView2.setText(address);
+                }*//*
+         *//*       if(c==2){
+                textView2.setText(address);}*//*
+                //   textView2.setText(address);*/
             } catch (Exception e) {
                 e.printStackTrace();
             }

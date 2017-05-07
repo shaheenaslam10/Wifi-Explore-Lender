@@ -207,8 +207,8 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     }
                 }
                 if (flag == 0) {
-                    income.setText("Not Available");
-                    outcome.setText("Not Available");
+                    income.setText("$ 0.0 USD");
+                    outcome.setText("$ 0.0 USD");
                 }
             }
 
@@ -342,7 +342,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                     if (!balance.isEmpty()) {
                         walletDataBase.setBalance(balance);
                     } else {
-                        walletDataBase.setBalance("Balance Not Available");
+                        walletDataBase.setBalance("$ 0.0 USD");
                     }
 
                     runOnUiThread(new Runnable() {
@@ -381,7 +381,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        income.setText("Not Available");
+                                        income.setText("$ 0.0 USD");
                                     }
                                 });
                             }
@@ -411,7 +411,7 @@ public class MyWalletActivit extends AppCompatActivity implements MyInterface, M
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        outcome.setText("Not Available");
+                                        outcome.setText("$ 0.0 USD");
                                     }
                                 });
                             }

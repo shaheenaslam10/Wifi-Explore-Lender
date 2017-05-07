@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -31,6 +34,7 @@ import com.zaingz.holygon.wifi_explorelender.Database.Mytoken;
 import com.zaingz.holygon.wifi_explorelender.Database.RouterGetList;
 import com.zaingz.holygon.wifi_explorelender.Database.WalletDataBase;
 import com.zaingz.holygon.wifi_explorelender.Database.WifiLenderData;
+import com.zaingz.holygon.wifi_explorelender.Valoidators.Validations;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     String myToekn;
     ProgressDialog dialog;
     Intent intent;
+    int connt = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         ll_wallet = (LinearLayout) findViewById(R.id.ll_wallet);
         ll_add = (LinearLayout) findViewById(R.id.ll_add);
-        ll_devices = (LinearLayout) findViewById(R.id.ll_devices);
+        // ll_devices = (LinearLayout) findViewById(R.id.ll_devices);
 
         ll_logout = (LinearLayout) findViewById(R.id.ll_logout);
         ll_profile = (LinearLayout) findViewById(R.id.ll_profile);
@@ -102,26 +107,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        ll_devices.setOnClickListener(new View.OnClickListener() {
+        /*ll_devices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MyDevicesActivity.class);
                 intent.putExtra("device_count", st_device_cnt);
                 startActivity(intent);
             }
-        });
+        });*/
         ll_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String cnt = String.valueOf(connt);
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("device_count_profile", st_device_cnt);
+                intent.putExtra("users_count_profile", cnt);
                 startActivity(intent);
             }
         });
         txt_earnings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MyDevicesActivity.class);
-                startActivity(intent);
+               /* Intent intent = new Intent(getApplicationContext(), MyDevicesActivity.class);
+                startActivity(intent);*/
             }
         });
         ll_logout.setOnClickListener(new View.OnClickListener() {
@@ -157,32 +165,60 @@ public class MainActivity extends AppCompatActivity {
         fl_grid = (FrameLayout) findViewById(R.id.fl_grid);
         fl_grid.setVisibility(View.INVISIBLE);
 
-
         img_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (list) {
 
-                    img_list.setImageDrawable(getResources().getDrawable(R.drawable.list));
-                    fl_grid.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Animation fadeInAnimation = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in);
+                            Animation fadeOutAnimation = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out);
+                            fl_grid.startAnimation(fadeInAnimation);
+                            img_list.startAnimation(fadeInAnimation);
+
+                            img_list.setImageDrawable(getResources().getDrawable(R.drawable.list));
+                            fl_grid.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+
+                        }
+                    }, 500);
+
                     list = false;
 
                 } else {
-                    img_list.setImageDrawable(getResources().getDrawable(R.drawable.grid));
-                    fl_grid.setVisibility(View.INVISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Animation fadeInAnimation = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_in);
+                            Animation fadeOutAnimation = AnimationUtils.loadAnimation(MainActivity.this, android.R.anim.fade_out);
+                            recyclerView.startAnimation(fadeInAnimation);
+                            img_list.startAnimation(fadeInAnimation);
+
+                            img_list.setImageDrawable(getResources().getDrawable(R.drawable.grid));
+                            fl_grid.setVisibility(View.INVISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+                    }, 500);
+
+
+
                     list = true;
-                    recyclerView.setVisibility(View.VISIBLE);
                 }
 
             }
         });
 
-
-        AsynchRouterList asynchRouterList = new AsynchRouterList();
-        asynchRouterList.execute();
-        dialog.show();
+        if (Validations.checkConnection(getApplicationContext())) {
+            AsynchRouterList asynchRouterList = new AsynchRouterList();
+            asynchRouterList.execute();
+            dialog.show();
+        } else {
+            Toast.makeText(this, "Check Your Intenet Connection..", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -190,8 +226,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
 
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(R.animator.pull_in_right, android.R.anim.fade_out);
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -288,6 +334,11 @@ public class MainActivity extends AppCompatActivity {
                         jadd_connection = jsonObject.getString("connections");
                         jadd_rating = jsonObject.getString("rating");
 
+
+                        int con = Integer.parseInt(jadd_connection);
+                        connt = connt + con;
+
+
                         Log.e("shani", "Lender wifis post response strings ====  : " + jadd_name);
                         Log.e("shani", "Lender wifis post response strings ====  : " + jadd_ssid);
                         Log.e("shani", "Lender wifis post response strings ====  : " + jadd_address);
@@ -341,10 +392,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.e("shani", "Lender wifis get response unsuccessful : " + response.toString());
+                    dialog.dismiss();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("shani", "Lender wifis get response failure exception e  : " + e.toString());
+                dialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                // Toast.makeText(MainActivity.this, "Response Unsuccessful", Toast.LENGTH_SHORT).show();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
